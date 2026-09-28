@@ -1,0 +1,10 @@
+[
+  {
+    "name": "arabic-video-subtitles-skill",
+    "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
+    "category": "Media & Localization",
+    "description": "Professional Arabic subtitling guidelines adhering to Netflix Timed Text Style Guide (2025/2026) and automated QC validation scripts.",
+    "url": "https://github.com/EngDawood/arabic-video-subtitles-skill",
+    "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill"
+  }
+]

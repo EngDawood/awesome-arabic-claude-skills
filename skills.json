@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "awesome-arabic-claude-skills",
+  "description": "Curated directory and registry of Arabic skills for Claude Code and AI agents",
+  "total_skills": 6,
+  "native_skills_count": 5,
+  "external_skills_count": 1,
+  "skills": [
+    {
+      "id": "arabic-academic-research",
+      "name": "arabic-academic-research",
+      "title_ar": "البحث والتوثيق الأكاديمي وتحقيق النصوص العربية",
+      "category": "Academic & Research",
+      "type": "native",
+      "description": "Guide Arabic academic research writing, citation formatting (APA 7th Arabic edition, Chicago, MLA), manuscript editing (تحقيق التراث), and scholarly reference auditing. Use when drafting or formatting Arabic academic papers, theses, bibliographies, Islamic/historical terminology, or when citing Arabic primary and secondary sources.",
+      "path": "skills/arabic-academic-research/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-academic-research",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-academic-research"
+    },
+    {
+      "id": "arabic-copywriting",
+      "name": "arabic-copywriting",
+      "title_ar": "صياغة المحتوى العربي والكتابة الإعلانية والتحريرية",
+      "category": "Content & Copywriting",
+      "type": "native",
+      "description": "Craft high-converting Arabic marketing copy, UX microcopy, and editorial content. Eliminates literal translation artifacts (الترجمة الحرفية الركيكة), establishes authentic tone of voice, and sharpens Arabic rhetoric. Use when writing, editing, or auditing Arabic articles, UI microcopy, landing page headlines, emails, or brand messaging.",
+      "path": "skills/arabic-copywriting/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-copywriting",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-copywriting"
+    },
+    {
+      "id": "arabic-localization-rtl",
+      "name": "arabic-localization-rtl",
+      "title_ar": "تعريب البرمجيات وهندسة واجهات RTL",
+      "category": "Software & RTL Engineering",
+      "type": "native",
+      "description": "Guide Arabic software localization, RTL layout adaptation, bidirectional text (BiDi) handling, Arabic typography, and pluralization. Use when building or refactoring UI components for Arabic, adapting CSS/Tailwind for RTL, handling mixed Arabic/English strings, or configuring i18next/Intl for Arabic locales (ar-SA, ar-EG, ar).",
+      "path": "skills/arabic-localization-rtl/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-localization-rtl",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-localization-rtl"
+    },
+    {
+      "id": "arabic-subtitling",
+      "name": "arabic-subtitling",
+      "title_ar": "معايير الترجمة المرئية والتفريغ العربي",
+      "category": "Media & Localization",
+      "type": "native",
+      "description": "Guide Arabic video subtitling, closed captioning, line-balancing, and formatting adhering to international standards (Netflix Arabic TTSG). Use when creating, translating, formatting, reviewing, or fixing Arabic subtitles, SRT/VTT files, or when user mentions Arabic captions, subtitling guidelines, or video caption timing.",
+      "path": "skills/arabic-subtitling/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-subtitling",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling"
+    },
+    {
+      "id": "arabic-tashkeel-nlp",
+      "name": "arabic-tashkeel-nlp",
+      "title_ar": "التشكيل والتدقيق اللغوي ومعالجة النصوص العربية (NLP)",
+      "category": "Language & NLP",
+      "type": "native",
+      "description": "Guide Arabic diacritization (Tashkeel/Harakat), grammatical inflection (I'rab), and Arabic NLP preprocessing (normalization, lemmatization, root extraction). Use when adding diacritics to Arabic text, preparing text for Arabic Text-to-Speech (TTS), fixing grammatical mistakes, or processing Arabic strings in NLP and search pipelines.",
+      "path": "skills/arabic-tashkeel-nlp/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-tashkeel-nlp",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-tashkeel-nlp"
+    },
+    {
+      "id": "arabic-video-subtitles-skill",
+      "name": "arabic-video-subtitles-skill",
+      "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
+      "category": "Media & Localization",
+      "type": "external",
+      "description": "Professional Arabic subtitling guidelines adhering to Netflix Timed Text Style Guide (2025/2026) and automated QC validation scripts.",
+      "url": "https://github.com/EngDawood/arabic-video-subtitles-skill",
+      "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill"
+    }
+  ]
+}

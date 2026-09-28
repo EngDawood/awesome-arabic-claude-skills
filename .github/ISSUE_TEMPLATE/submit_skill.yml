@@ -1,0 +1,70 @@
+name: Submit a New Arabic Skill (إضافة مهارة عربية جديدة)
+description: Propose or register an Arabic Claude skill to be added to the catalog
+title: "[Skill]: "
+labels: ["add-skill", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        شكراً لمشاركتك معنا! يُرجى تعبئة الحقول التالية ليتم التحقق من المهارة وإضافتها تلقائياً إلى الفهرس.
+        Thank you for contributing! Please fill in the fields below to add your Arabic skill.
+
+  - type: input
+    id: skill_name
+    attributes:
+      label: Skill Name (اسم المهارة بالإنجليزية)
+      description: Lowercase alphanumeric name with hyphens (e.g. `arabic-sentiment-analysis`).
+      placeholder: my-arabic-skill
+    validations:
+      required: true
+
+  - type: input
+    id: skill_title_ar
+    attributes:
+      label: Skill Title in Arabic (عنوان المهارة بالعربية)
+      description: Concise title in Arabic (e.g. تحليل المشاعر والنصوص العربية).
+      placeholder: عنوان المهارة بالعربية
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category (التصنيف)
+      options:
+        - Content & Copywriting
+        - Software & RTL Engineering
+        - Media & Localization
+        - Language & NLP
+        - Academic & Research
+        - Workflow & Productivity
+        - Other / عام
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Repository / Skill URL (رابط المستودع أو المهارة)
+      description: Link to your GitHub repository or skill file.
+      placeholder: https://github.com/username/my-arabic-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description (الوصف)
+      description: Brief description in English and/or Arabic (max 1024 chars).
+      placeholder: Guide Arabic sentiment analysis and customer review classification...
+    validations:
+      required: true
+
+  - type: input
+    id: install_cmd
+    attributes:
+      label: Install Command (أمر التثبيت الاختياري)
+      description: e.g. `npx skills add username/my-arabic-skill`
+      placeholder: npx skills add username/my-arabic-skill
+    validations:
+      required: false

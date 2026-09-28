@@ -1,0 +1,61 @@
+name: Auto-Sync Arabic Skills Catalog
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'skills/**'
+      - 'sources.json'
+      - 'scripts/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'skills/**'
+      - 'sources.json'
+      - 'scripts/**'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1' # Run every Monday at 04:00 UTC
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Skills Validation and Auto-Sync
+        run: |
+          python scripts/sync_skills.py
+
+      - name: Verify Git Diff on Pull Requests
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::skills.json or README.md is out of sync with your changes. Please run 'python scripts/sync_skills.py' and commit the result."
+            git diff
+            exit 1
+          fi
+
+      - name: Commit and Push Changes on Main
+        if: github.event_name != 'pull_request'
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            git add skills.json README.md
+            git commit -m "chore(skills): auto-sync skills catalog and skills.json [skip ci]"
+            git push
+          else
+            echo "No catalog changes detected. Repository is up to date."
+          fi

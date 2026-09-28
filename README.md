@@ -1,1 +1,112 @@
-# awesome-arabic-claude-skills
+# Awesome Arabic Claude Skills | مهارات كلود العربية 🌟
+
+[![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Auto-Sync Catalog](https://github.com/EngDawood/awesome-arabic-claude-skills/actions/workflows/sync-skills.yml/badge.svg)](https://github.com/EngDawood/awesome-arabic-claude-skills/actions/workflows/sync-skills.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Language: Arabic & English](https://img.shields.io/badge/Language-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9%20%7C%20English-blue.svg)](#)
+
+> **قائمة مختارة ومكتبة مهارات مفتوحة المصدر لـ Claude Code ووكلاء الذكاء الاصطناعي، مخصصة للغة العربية، تعريب البرمجيات (RTL)، الترجمة المرئية، صياغة المحتوى، والمعالجة اللغوية.**  
+> *A curated directory and open-source skill library for Claude Code and AI agents, specifically engineered for the Arabic language, RTL localization, subtitling, copywriting, and NLP.*
+
+---
+
+## الفهرس / Table of Contents
+- [نظرة عامة / Overview](#نظرة-عامة--overview)
+- [طريقة التثبيت والاستخدام / Installation & Usage](#طريقة-التثبيت-والاستخدام--installation--usage)
+- [فهرس المهارات المحدث تلقائياً / Auto-Synced Skills Catalog](#فهرس-المهارات-المحدث-تلقائيا--auto-synced-skills-catalog)
+- [أدوات ومخدمات MCP عربية / Arabic MCP Servers & Tools](#أدوات-ومخدمات-mcp-عربية--arabic-mcp-servers--tools)
+- [المزامنة التلقائية عبر GitHub Actions / GitHub Actions Automation](#المزامنة-التلقائية-عبر-github-actions--github-actions-automation)
+- [دليل المساهمة / Contributing](#دليل-المساهمة--contributing)
+- [الترخيص / License](#الترخيص--license)
+
+---
+
+## نظرة عامة / Overview
+
+تتيح **مهارات كلود (Claude Skills)** توسيع قدرات نموذج الذكاء الاصطناعي بسياق متخصص وقواعد عمل دقيقة وتعليمات برمجية جاهزة. يهدف هذا المستودع إلى أن يكون المرجع العربي الأول لهذه المهارات، حيث يجمع بين:
+1. **مهارات مدمجة (Native Built-in Skills)** جاهزة للاستخدام المباشر داخل مجلد `skills/`.
+2. **فهرس متجدد (Curated Catalog & Registry)** لجميع المهارات والمستودعات ومخدمات MCP العربية في مجتمع المطورين.
+3. **مزامنة تلقائية (Auto-Sync via GitHub Actions)** للتحقق من المهارات وتحديث الفهارس وسجل `skills.json` آلياً عند كل تحديث أو مساهمة.
+
+---
+
+## طريقة التثبيت والاستخدام / Installation & Usage
+
+### 1. تثبيت مهارة محددة عبر `npx skills` (Universal Skills)
+يمكنك تثبيت أي مهارة من هذا المستودع مباشرة في مشروعك أو على مستوى نظامك العام:
+```bash
+# تثبيت مهارة محددة في مجلد المشروع الحالي
+npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling
+
+# تثبيت المهارة عامةً لجميع مشاريع Claude Code و Cursor
+npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-localization-rtl -g
+```
+
+### 2. التثبيت اليدوي مع Claude Code
+انسخ مجلد المهارة المطلوبة من `skills/` إلى مجلد مهارات كلود في مشروعك:
+```bash
+# في مجلد مشروعك
+mkdir -p .claude/skills
+cp -r /path/to/awesome-arabic-claude-skills/skills/arabic-copywriting .claude/skills/
+```
+
+أو أضفها إلى إعدادات كلود العامة في جهازك:
+- **نظام لينكس / ماك**: `~/.claude/skills/`
+- **نظام ويندوز**: `%USERPROFILE%\.gemini\config\skills\` أو `%USERPROFILE%\.claude\skills\`
+
+---
+
+## فهرس المهارات المحدث تلقائياً / Auto-Synced Skills Catalog
+
+يتم تحديث هذا الجدول وسجل `skills.json` تلقائياً عبر GitHub Actions بمجرد إضافة أو تعديل أي مهارة.
+
+<!-- SKILLS_TABLE_START -->
+
+| المهارة (Skill) | التصنيف (Category) | الوصف (Description) | التثبيت والاستخدام (Install / Link) |
+| :--- | :--- | :--- | :--- |
+| **[arabic-academic-research](https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-academic-research)**<br>البحث والتوثيق الأكاديمي وتحقيق النصوص العربية *(مدمجة / Native)* | `Academic & Research` | Guide Arabic academic research writing, citation formatting (APA 7th Arabic edition, Chicago, MLA), manuscript editing (تحقيق التراث), and scholarly reference auditing. Use when drafting or formatting Arabic academic papers, theses, bibliographies, Islamic/historical terminology, or when citing Arabic primary and secondary sources. | `npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-academic-research` |
+| **[arabic-copywriting](https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-copywriting)**<br>صياغة المحتوى العربي والكتابة الإعلانية والتحريرية *(مدمجة / Native)* | `Content & Copywriting` | Craft high-converting Arabic marketing copy, UX microcopy, and editorial content. Eliminates literal translation artifacts (الترجمة الحرفية الركيكة), establishes authentic tone of voice, and sharpens Arabic rhetoric. Use when writing, editing, or auditing Arabic articles, UI microcopy, landing page headlines, emails, or brand messaging. | `npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-copywriting` |
+| **[arabic-localization-rtl](https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-localization-rtl)**<br>تعريب البرمجيات وهندسة واجهات RTL *(مدمجة / Native)* | `Software & RTL Engineering` | Guide Arabic software localization, RTL layout adaptation, bidirectional text (BiDi) handling, Arabic typography, and pluralization. Use when building or refactoring UI components for Arabic, adapting CSS/Tailwind for RTL, handling mixed Arabic/English strings, or configuring i18next/Intl for Arabic locales (ar-SA, ar-EG, ar). | `npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-localization-rtl` |
+| **[arabic-subtitling](https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-subtitling)**<br>معايير الترجمة المرئية والتفريغ العربي *(مدمجة / Native)* | `Media & Localization` | Guide Arabic video subtitling, closed captioning, line-balancing, and formatting adhering to international standards (Netflix Arabic TTSG). Use when creating, translating, formatting, reviewing, or fixing Arabic subtitles, SRT/VTT files, or when user mentions Arabic captions, subtitling guidelines, or video caption timing. | `npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling` |
+| **[arabic-tashkeel-nlp](https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-tashkeel-nlp)**<br>التشكيل والتدقيق اللغوي ومعالجة النصوص العربية (NLP) *(مدمجة / Native)* | `Language & NLP` | Guide Arabic diacritization (Tashkeel/Harakat), grammatical inflection (I'rab), and Arabic NLP preprocessing (normalization, lemmatization, root extraction). Use when adding diacritics to Arabic text, preparing text for Arabic Text-to-Speech (TTS), fixing grammatical mistakes, or processing Arabic strings in NLP and search pipelines. | `npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-tashkeel-nlp` |
+| **[arabic-video-subtitles-skill](https://github.com/EngDawood/arabic-video-subtitles-skill)**<br>معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG) *(خارجية / External)* | `Media & Localization` | Professional Arabic subtitling guidelines adhering to Netflix Timed Text Style Guide (2025/2026) and automated QC validation scripts. | `npx skills add EngDawood/arabic-video-subtitles-skill` |
+
+<!-- SKILLS_TABLE_END -->
+
+---
+
+## أدوات ومخدمات MCP عربية / Arabic MCP Servers & Tools
+
+مجموعة من مخدمات بروتوكول سياق النموذج (Model Context Protocol - MCP) والأدوات الداعمة للمحتوى والبيانات العربية:
+
+| الأداة / المخدم | الوصف | الرابط |
+| :--- | :--- | :--- |
+| **Arabic Scholar MCP** | مخدم MCP للبحث الأكاديمي والتحقيق والوصول للمصادر التراثية والإسلامية | [المستودع](https://github.com/EngDawood) |
+| **Mandumah MCP** | تكامل واسترجاع الأبحاث والرسائل العلمية من قاعدة بيانات دار المنظومة | [المستودع](https://github.com/EngDawood) |
+| **Arabic Video Subtitles Skill** | دليل معايير وقواعد الترجمة المرئية والتفريغ النصي العربي (Netflix TTSG) | [المستودع](https://github.com/EngDawood/arabic-video-subtitles-skill) |
+| **Thmanyah Font Web** | حزمة وتطبيق ويب لخطوط ثمانية ودعم التيبوغرافيا العربية الحديثة | [المستودع](https://github.com/EngDawood) |
+
+---
+
+## المزامنة التلقائية عبر GitHub Actions / GitHub Actions Automation
+
+يحتوي المستودع على منظومة متكاملة لأتمتة إضافة وتحديث المهارات:
+- **فحص الترويسة والصيغة (Validation)**: التحقق من التزام كل ملف `SKILL.md` بمعايير صيغة YAML Frontmatter وعدم تجاوز الوصف لـ 1024 حرفاً ووجود معايير التفعيل.
+- **تحديث سجل `skills.json`**: توليد ملف JSON مهيكل يمكن للأدوات الخارجية وواجهات السطر البرمجي (CLI) قراءته برمجياً.
+- **تحديث الـ README دورياً**: حقن المهارات المدمجة والخارجية من `sources.json` مباشرة في جدول الفهرس أعلاه.
+- **إضافة المهارات عبر الـ Issues والـ PRs**: عند اعتماد مساهمة، يقوم الـ Workflow بمزامنة المحتوى فوراً.
+
+---
+
+## دليل المساهمة / Contributing
+
+نرحب بجميع المساهمات من المجتمع العربي والعالمي!
+- لإضافة مهارة جديدة: افتح [Pull Request](CONTRIBUTING.md) أو أرسل اقتراحك عبر [نموذج المهارات](../../issues/new?template=submit_skill.yml).
+- للمزيد من التفاصيل، راجع [دليل المساهمة CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## الترخيص / License
+
+هذا المشروع مرخص تحت رخصة **MIT**. راجع ملف [LICENSE](LICENSE) لمزيد من التفاصيل.
