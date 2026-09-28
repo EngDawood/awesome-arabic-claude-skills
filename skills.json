@@ -1,10 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "awesome-arabic-claude-skills",
-  "description": "Curated directory and registry of Arabic skills for Claude Code and AI agents",
-  "total_skills": 6,
-  "native_skills_count": 5,
-  "external_skills_count": 1,
+  "description": "Curated directory and registry of Arabic skills and commands for Claude Code and AI agents",
+  "total_skills": 5,
+  "total_commands": 2,
   "skills": [
     {
       "id": "arabic-academic-research",
@@ -12,6 +11,7 @@
       "title_ar": "البحث والتوثيق الأكاديمي وتحقيق النصوص العربية",
       "category": "Academic & Research",
       "type": "native",
+      "upstream_repo": null,
       "description": "Guide Arabic academic research writing, citation formatting (APA 7th Arabic edition, Chicago, MLA), manuscript editing (تحقيق التراث), and scholarly reference auditing. Use when drafting or formatting Arabic academic papers, theses, bibliographies, Islamic/historical terminology, or when citing Arabic primary and secondary sources.",
       "path": "skills/arabic-academic-research/SKILL.md",
       "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-academic-research",
@@ -23,6 +23,7 @@
       "title_ar": "صياغة المحتوى العربي والكتابة الإعلانية والتحريرية",
       "category": "Content & Copywriting",
       "type": "native",
+      "upstream_repo": null,
       "description": "Craft high-converting Arabic marketing copy, UX microcopy, and editorial content. Eliminates literal translation artifacts (الترجمة الحرفية الركيكة), establishes authentic tone of voice, and sharpens Arabic rhetoric. Use when writing, editing, or auditing Arabic articles, UI microcopy, landing page headlines, emails, or brand messaging.",
       "path": "skills/arabic-copywriting/SKILL.md",
       "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-copywriting",
@@ -34,6 +35,7 @@
       "title_ar": "تعريب البرمجيات وهندسة واجهات RTL",
       "category": "Software & RTL Engineering",
       "type": "native",
+      "upstream_repo": null,
       "description": "Guide Arabic software localization, RTL layout adaptation, bidirectional text (BiDi) handling, Arabic typography, and pluralization. Use when building or refactoring UI components for Arabic, adapting CSS/Tailwind for RTL, handling mixed Arabic/English strings, or configuring i18next/Intl for Arabic locales (ar-SA, ar-EG, ar).",
       "path": "skills/arabic-localization-rtl/SKILL.md",
       "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-localization-rtl",
@@ -42,13 +44,14 @@
     {
       "id": "arabic-subtitling",
       "name": "arabic-subtitling",
-      "title_ar": "معايير الترجمة المرئية والتفريغ العربي",
+      "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
       "category": "Media & Localization",
-      "type": "native",
-      "description": "Guide Arabic video subtitling, closed captioning, line-balancing, and formatting adhering to international standards (Netflix Arabic TTSG). Use when creating, translating, formatting, reviewing, or fixing Arabic subtitles, SRT/VTT files, or when user mentions Arabic captions, subtitling guidelines, or video caption timing.",
+      "type": "synced",
+      "upstream_repo": "EngDawood/arabic-video-subtitles-skill",
+      "description": "Guidelines and QC tooling for adding Arabic subtitles or captions to video - Arabic-to-Arabic captions (transcription, SDH) and translated subtitles (English or other language into Modern Standard Arabic). Covers Netflix Timed Text Style Guide rules (42 chars/line, 2 lines, reading speed, timing/gaps/shot changes, numbers, quotes, ellipses, diacritics, songs, forced narratives), translation strategies for cultural references, and an SRT/VTT checker script. Use this skill whenever the user wants Arabic subtitles, captions, ترجمة فيديو, ترجمة مرئية, تفريغ نصي, تسميات توضيحية, SRT/VTT/TTML files, burning captions into a video, translating a video transcript to Arabic, or reviewing/fixing existing Arabic subtitles - even if they never say \"Netflix\" or \"style guide\".",
       "path": "skills/arabic-subtitling/SKILL.md",
-      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-subtitling",
-      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling"
+      "url": "https://github.com/EngDawood/arabic-video-subtitles-skill",
+      "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill"
     },
     {
       "id": "arabic-tashkeel-nlp",
@@ -56,20 +59,25 @@
       "title_ar": "التشكيل والتدقيق اللغوي ومعالجة النصوص العربية (NLP)",
       "category": "Language & NLP",
       "type": "native",
+      "upstream_repo": null,
       "description": "Guide Arabic diacritization (Tashkeel/Harakat), grammatical inflection (I'rab), and Arabic NLP preprocessing (normalization, lemmatization, root extraction). Use when adding diacritics to Arabic text, preparing text for Arabic Text-to-Speech (TTS), fixing grammatical mistakes, or processing Arabic strings in NLP and search pipelines.",
       "path": "skills/arabic-tashkeel-nlp/SKILL.md",
       "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-tashkeel-nlp",
       "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-tashkeel-nlp"
+    }
+  ],
+  "commands": [
+    {
+      "command": "/check-subtitles",
+      "description": "Run automated and manual QC checks on Arabic SRT or VTT subtitle files against Netflix TTSG rules.",
+      "argument": "file_path",
+      "path": "commands/check-subtitles.md"
     },
     {
-      "id": "arabic-video-subtitles-skill",
-      "name": "arabic-video-subtitles-skill",
-      "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
-      "category": "Media & Localization",
-      "type": "external",
-      "description": "Professional Arabic subtitling guidelines adhering to Netflix Timed Text Style Guide (2025/2026) and automated QC validation scripts.",
-      "url": "https://github.com/EngDawood/arabic-video-subtitles-skill",
-      "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill"
+      "command": "/translate-subtitles",
+      "description": "Translate or adapt foreign dialogue into professional Modern Standard Arabic subtitles following Netflix TTSG and ECR strategies.",
+      "argument": "text_or_subtitles",
+      "path": "commands/translate-subtitles.md"
     }
   ]
 }
