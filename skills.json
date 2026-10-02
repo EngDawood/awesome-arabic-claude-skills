@@ -66,6 +66,18 @@
       "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling-guidelines"
     },
     {
+      "id": "arabic-subtitling-guidelines",
+      "name": "arabic-subtitling-guidelines",
+      "title_ar": "arabic-subtitling-guidelines",
+      "category": "General",
+      "type": "native",
+      "upstream_repo": null,
+      "description": "Guidelines and QC tooling for adding Arabic subtitles or captions to video - Arabic-to-Arabic captions (transcription, SDH) and translated subtitles (English or other language into Modern Standard Arabic). Covers Netflix Timed Text Style Guide rules (42 chars/line, 2 lines, reading speed, timing/gaps/shot changes, numbers, quotes, ellipses, diacritics, songs, forced narratives), translation strategies for cultural references, and an SRT/VTT checker script. Use this skill whenever the user wants Arabic subtitles, captions, ترجمة فيديو, ترجمة مرئية, تفريغ نصي, تسميات توضيحية, SRT/VTT/TTML files, burning captions into a video, translating a video transcript to Arabic, or reviewing/fixing existing Arabic subtitles - even if they never say \"Netflix\" or \"style guide\".",
+      "path": "skills/arabic-subtitling-guidelines/SKILL.md",
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-subtitling-guidelines",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling-guidelines"
+    },
+    {
       "id": "arabic-tashkeel-nlp",
       "name": "arabic-tashkeel-nlp",
       "title_ar": "التشكيل والتدقيق اللغوي ومعالجة النصوص العربية (NLP)",
