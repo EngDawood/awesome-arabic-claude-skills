@@ -27,9 +27,8 @@ COMMANDS_START_MARKER = "<!-- COMMANDS_TABLE_START -->"
 COMMANDS_END_MARKER = "<!-- COMMANDS_TABLE_END -->"
 
 
-def parse_frontmatter(file_path: Path) -> dict:
-    """Extract YAML frontmatter from a markdown file without external dependencies."""
-    content = file_path.read_text(encoding="utf-8")
+def parse_frontmatter_text(content: str) -> dict:
+    """Extract YAML frontmatter from markdown content without external dependencies."""
     match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
     if not match:
         return {}
@@ -56,6 +55,12 @@ def parse_frontmatter(file_path: Path) -> dict:
             data[current_key] += " " + line
 
     return data
+
+
+def parse_frontmatter(file_path: Path) -> dict:
+    """Extract YAML frontmatter from a markdown file without external dependencies."""
+    content = file_path.read_text(encoding="utf-8")
+    return parse_frontmatter_text(content)
 
 
 def validate_skill(skill: dict, file_path: Path) -> list:
@@ -110,23 +115,40 @@ def extract_tar_folder(tar: tarfile.TarFile, root_prefix: str, source_rel: str, 
     return synced_count
 
 
-def sync_external_repositories(sources: list):
-    """Sync skills and commands from upstream GitHub repositories."""
+def sync_external_repositories(sources: list) -> dict:
+    """Sync skills and commands from upstream GitHub repositories.
+    Supports:
+    - Smart format: {"repo": "owner/repo", "dir": "skills/"}
+    - Specific skill: {"repo": "owner/repo", "dir": "skills/my-skill"}
+    - Explicit format: {"repo": "...", "source_path": "...", "target_path": "..."}
+    Returns a dict mapping folder name in skills/ to metadata.
+    """
+    synced_meta = {}
+
     for item in sources:
-        if item.get("type") != "synced" and not item.get("repo"):
+        raw_repo = item.get("repo") or item.get("url") or ""
+        if not raw_repo:
             continue
 
-        repo = item.get("repo")
-        branch = item.get("branch", "main")
-        source_path = item.get("source_path", "").strip("/")
-        target_path = item.get("target_path", "").strip("/")
-        commands_source = item.get("commands_source", "").strip("/")
-        commands_target = item.get("commands_target", "").strip("/")
+        raw_repo = re.sub(r"^https?://github\.com/", "", raw_repo).strip("/")
+        repo_match = re.match(r"^([^/]+/[^/]+)(?:/tree/([^/]+)(?:/(.*))?)?", raw_repo)
+        if repo_match:
+            repo = repo_match.group(1)
+            branch = item.get("branch") or repo_match.group(2) or "main"
+            url_subpath = repo_match.group(3) or ""
+        else:
+            repo = raw_repo
+            branch = item.get("branch", "main")
+            url_subpath = ""
 
-        if not repo:
-            continue
+        dir_spec = item.get("dir")
+        if dir_spec is None:
+            dir_spec = item.get("source_path", url_subpath)
 
-        print(f"Syncing from GitHub: {repo}@{branch}...")
+        dir_spec_str = dir_spec.strip() if dir_spec else ""
+        is_directory_mode = dir_spec_str.endswith("/") or dir_spec_str == "skills"
+
+        print(f"Syncing from GitHub: {repo}@{branch} (dir: '{dir_spec_str}')...")
         archive_url = f"https://github.com/{repo}/archive/refs/heads/{branch}.tar.gz"
 
         try:
@@ -148,17 +170,100 @@ def sync_external_repositories(sources: list):
                     if not root_prefix:
                         continue
 
-                    # 1. Sync skill files
-                    if target_path:
-                        dest_skill_dir = ROOT_DIR / target_path
-                        count = extract_tar_folder(tar, root_prefix, source_path, dest_skill_dir)
-                        print(f" - Synced {count} skill files to {target_path}")
+                    # 1. Discover all SKILL.md files in the tarball
+                    all_skill_files = []
+                    for m in members:
+                        if m.isfile() and (m.name == f"{root_prefix}/SKILL.md" or m.name.endswith("/SKILL.md")):
+                            rel_skill = m.name[len(root_prefix) :].lstrip("/")
+                            all_skill_files.append((m, rel_skill))
 
-                    # 2. Sync commands if present
-                    if commands_source and commands_target:
+                    clean_dir_spec = dir_spec_str.strip("/")
+
+                    skills_to_extract = []
+                    for member, rel_skill in all_skill_files:
+                        skill_folder_rel = str(Path(rel_skill).parent).replace("\\", "/")
+                        if skill_folder_rel == ".":
+                            skill_folder_rel = ""
+
+                        matches = False
+                        if not clean_dir_spec:
+                            if skill_folder_rel == "":
+                                matches = True
+                            elif not any(r == "SKILL.md" for _, r in all_skill_files):
+                                matches = True
+                        elif is_directory_mode:
+                            if skill_folder_rel == clean_dir_spec or skill_folder_rel.startswith(clean_dir_spec + "/"):
+                                matches = True
+                        else:
+                            if skill_folder_rel == clean_dir_spec:
+                                matches = True
+
+                        if matches:
+                            skills_to_extract.append((member, skill_folder_rel))
+
+                    # Fallback if no SKILL.md found by pattern but dir_spec was given
+                    if not skills_to_extract and clean_dir_spec:
+                        skills_to_extract.append((None, clean_dir_spec))
+
+                    # 2. Extract each matched skill
+                    for skill_md_member, source_rel in skills_to_extract:
+                        fm = {}
+                        if skill_md_member:
+                            f = tar.extractfile(skill_md_member)
+                            if f:
+                                fm = parse_frontmatter_text(f.read().decode("utf-8", errors="replace"))
+
+                        if len(skills_to_extract) == 1 and item.get("name"):
+                            skill_name = item.get("name")
+                        else:
+                            skill_name = fm.get("name") or Path(source_rel).name or repo.split("/")[1]
+
+                        skill_name = re.sub(r"[^a-z0-9-]", "-", skill_name.lower()).strip("-")
+
+                        if len(skills_to_extract) == 1 and item.get("target_path"):
+                            target_rel = item.get("target_path")
+                        else:
+                            target_rel = f"skills/{skill_name}"
+
+                        dest_skill_dir = ROOT_DIR / target_rel
+                        count = extract_tar_folder(tar, root_prefix, source_rel, dest_skill_dir)
+                        print(f" - Synced skill '{skill_name}' ({count} files) to {target_rel}")
+
+                        skill_url = item.get("url") or (
+                            f"https://github.com/{repo}"
+                            if not source_rel
+                            else f"https://github.com/{repo}/tree/{branch}/{source_rel}"
+                        )
+                        install_cmd = item.get("install_cmd") or (
+                            f"npx skills add {repo}"
+                            if not source_rel
+                            else f"npx skills add {repo} --skill {skill_name}"
+                        )
+
+                        folder_target_name = Path(target_rel).name
+                        synced_meta[folder_target_name] = {
+                            "name": skill_name,
+                            "title_ar": item.get("title_ar") or fm.get("title_ar", skill_name),
+                            "category": item.get("category") or fm.get("category", "General"),
+                            "type": item.get("type", "synced"),
+                            "upstream_repo": repo,
+                            "description": fm.get("description", ""),
+                            "url": skill_url,
+                            "install_cmd": install_cmd,
+                            "target_path": target_rel,
+                        }
+
+                    # 3. Sync commands if present in repo
+                    commands_source = item.get("commands_source", "commands").strip("/")
+                    commands_target = item.get("commands_target", "commands").strip("/")
+                    has_commands = any(
+                        m.name.startswith(f"{root_prefix}/{commands_source}/") for m in members
+                    )
+                    if has_commands and commands_target:
                         dest_cmd_dir = ROOT_DIR / commands_target
                         cmd_count = extract_tar_folder(tar, root_prefix, commands_source, dest_cmd_dir)
-                        print(f" - Synced {cmd_count} command files to {commands_target}")
+                        if cmd_count > 0:
+                            print(f" - Synced {cmd_count} command files to {commands_target}")
 
         except Exception as e:
             print(
@@ -166,30 +271,39 @@ def sync_external_repositories(sources: list):
                 file=sys.stderr,
             )
 
+    return synced_meta
+
 
 def load_sources() -> list:
-    """Load configuration from sources.json."""
+    """Load configuration from sources.json, tolerating trailing commas and comments."""
     if not SOURCES_FILE.exists():
         return []
     try:
-        with open(SOURCES_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+        content = SOURCES_FILE.read_text(encoding="utf-8")
+        # Strip single-line comments
+        content = re.sub(r"^\s*//.*$", "", content, flags=re.MULTILINE)
+        # Strip trailing commas in objects and arrays
+        content = re.sub(r",\s*([\]}])", r"\1", content)
+        return json.loads(content)
     except Exception as e:
         print(f"Warning: Failed to load sources.json: {e}", file=sys.stderr)
         return []
 
 
-def collect_native_skills(sources: list) -> tuple[list, list]:
+def collect_native_skills(sources: list, synced_meta: dict = None) -> tuple[list, list]:
     """Scan the skills/ directory for native SKILL.md files."""
     skills = []
     validation_errors = []
 
-    synced_map = {}
+    if synced_meta is None:
+        synced_meta = {}
+
+    sources_map = {}
     for s in sources:
-        target_path = s.get("target_path")
+        target_path = s.get("target_path") or (f"skills/{s.get('name')}" if s.get("name") else None)
         if target_path:
             norm_target = Path(target_path).name
-            synced_map[norm_target] = s
+            sources_map[norm_target] = s
 
     if not SKILLS_DIR.exists():
         return skills, validation_errors
@@ -205,23 +319,23 @@ def collect_native_skills(sources: list) -> tuple[list, list]:
                     continue
 
                 folder_name = item.name
-                is_synced = folder_name in synced_map
-                source_info = synced_map.get(folder_name, {})
+                is_synced = (folder_name in synced_meta) or (folder_name in sources_map)
+                source_info = synced_meta.get(folder_name) or sources_map.get(folder_name, {})
 
-                name = folder_name
+                name = source_info.get("name") or folder_name
                 title_ar = source_info.get("title_ar") or fm.get("title_ar", name)
                 category = source_info.get("category") or fm.get("category", "General")
-                desc = fm.get("description", "")
-                skill_type = "synced" if is_synced else "native"
-                upstream_repo = source_info.get("repo")
+                desc = fm.get("description", "") or source_info.get("description", "")
+                skill_type = source_info.get("type", "synced" if is_synced else "native")
+                upstream_repo = source_info.get("upstream_repo") or source_info.get("repo")
                 url = (
                     source_info.get("url")
-                    if is_synced
+                    if is_synced and source_info.get("url")
                     else f"https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/{folder_name}"
                 )
                 install_cmd = (
                     source_info.get("install_cmd")
-                    if is_synced
+                    if is_synced and source_info.get("install_cmd")
                     else f"npx skills add EngDawood/awesome-arabic-claude-skills --skill {name}"
                 )
 
@@ -353,10 +467,10 @@ def main():
     sources = load_sources()
 
     # 1. Sync external GitHub repos (skills + commands)
-    sync_external_repositories(sources)
+    synced_meta = sync_external_repositories(sources)
 
     # 2. Collect skills
-    native_skills, errors = collect_native_skills(sources)
+    native_skills, errors = collect_native_skills(sources, synced_meta)
     if errors:
         print("Validation errors encountered:")
         for err in errors:

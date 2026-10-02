@@ -1,16 +1,13 @@
 [
   {
+    "repo": "EngDawood/arabic-video-subtitles-skill",
+    "dir": "skills/arabic-subtitling-guidelines",
     "name": "arabic-subtitling",
     "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
-    "category": "Media & Localization",
-    "type": "synced",
-    "repo": "EngDawood/arabic-video-subtitles-skill",
-    "branch": "main",
-    "source_path": "skills/arabic-subtitling-guidelines",
-    "target_path": "skills/arabic-subtitling",
-    "commands_source": "commands",
-    "commands_target": "commands",
-    "url": "https://github.com/EngDawood/arabic-video-subtitles-skill",
-    "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill"
+    "category": "Media & Localization"
+  },
+  {
+    "repo": "EngDawood/video-caption",
+    "dir": "skills/video-caption-mcp"
   }
 ]
