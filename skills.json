@@ -44,14 +44,14 @@
     {
       "id": "arabic-subtitling",
       "name": "arabic-subtitling",
-      "title_ar": "معايير الترجمة المرئية والتفريغ العربي (Netflix TTSG)",
-      "category": "Media & Localization",
-      "type": "synced",
-      "upstream_repo": "EngDawood/arabic-video-subtitles-skill",
+      "title_ar": "arabic-subtitling",
+      "category": "General",
+      "type": "native",
+      "upstream_repo": null,
       "description": "Guidelines and QC tooling for adding Arabic subtitles or captions to video - Arabic-to-Arabic captions (transcription, SDH) and translated subtitles (English or other language into Modern Standard Arabic). Covers Netflix Timed Text Style Guide rules (42 chars/line, 2 lines, reading speed, timing/gaps/shot changes, numbers, quotes, ellipses, diacritics, songs, forced narratives), translation strategies for cultural references, and an SRT/VTT checker script. Use this skill whenever the user wants Arabic subtitles, captions, ترجمة فيديو, ترجمة مرئية, تفريغ نصي, تسميات توضيحية, SRT/VTT/TTML files, burning captions into a video, translating a video transcript to Arabic, or reviewing/fixing existing Arabic subtitles - even if they never say \"Netflix\" or \"style guide\".",
       "path": "skills/arabic-subtitling/SKILL.md",
-      "url": "https://github.com/EngDawood/arabic-video-subtitles-skill/tree/main/skills/arabic-subtitling-guidelines",
-      "install_cmd": "npx skills add EngDawood/arabic-video-subtitles-skill --skill arabic-subtitling"
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/arabic-subtitling",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling"
     },
     {
       "id": "arabic-subtitling-guidelines",
@@ -82,12 +82,12 @@
       "name": "video-caption-mcp",
       "title_ar": "video-caption-mcp",
       "category": "General",
-      "type": "synced",
-      "upstream_repo": "EngDawood/video-caption",
+      "type": "native",
+      "upstream_repo": null,
       "description": "This skill should be used when the user asks to \"caption this video\", \"burn subtitles into this TikTok\", \"translate this reel\", \"add Arabic captions to this video\", \"subtitle this YouTube short\", \"change the caption font\", \"fix this caption line\", asks how to connect to or use the video-caption MCP server, or mentions its tools by name (submit_job, job_status, get_output, cancel_job, restyle_job, fix_script). Covers connecting to the /mcp endpoint, submitting a caption job, polling it, returning the finished download link, and restyling, correcting or stopping a job.",
       "path": "skills/video-caption-mcp/SKILL.md",
-      "url": "https://github.com/EngDawood/video-caption/tree/main/skills/video-caption-mcp",
-      "install_cmd": "npx skills add EngDawood/video-caption --skill video-caption-mcp"
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/video-caption-mcp",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill video-caption-mcp"
     }
   ],
   "commands": [
