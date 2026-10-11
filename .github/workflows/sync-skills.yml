@@ -24,6 +24,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: catalog-update
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
