@@ -1,4 +1,4 @@
-name: sync-skills
+name: Auto-Sync Arabic Skills Catalog
 
 on:
   push:
