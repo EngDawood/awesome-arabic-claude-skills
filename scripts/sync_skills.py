@@ -50,12 +50,14 @@ def parse_frontmatter_text(content: str) -> dict:
                 val.startswith("'") and val.endswith("'")
             ):
                 val = val[1:-1]
+            if val in (">", "|", ">-", "|-", ">+", "|+"):
+                val = ""
             data[key] = val
             current_key = key
         elif current_key:
             data[current_key] += " " + line
 
-    return data
+    return {k: v.strip() for k, v in data.items()}
 
 
 def parse_frontmatter(file_path: Path) -> dict:
