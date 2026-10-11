@@ -348,6 +348,7 @@ def collect_native_skills(sources: list, synced_meta: dict = None) -> tuple[list
                         "category": category,
                         "type": skill_type,
                         "upstream_repo": upstream_repo,
+                        "owner": owner_of(upstream_repo),
                         "description": desc,
                         "path": f"skills/{folder_name}/SKILL.md",
                         "url": url,
@@ -356,6 +357,15 @@ def collect_native_skills(sources: list, synced_meta: dict = None) -> tuple[list
                 )
 
     return skills, validation_errors
+
+
+def owner_of(upstream_repo: str = None) -> str:
+    """GitHub owner of the skill: the upstream repo owner, else this repo's owner."""
+    if upstream_repo:
+        repo = re.sub(r"^https?://github\.com/", "", upstream_repo).strip("/")
+        if "/" in repo:
+            return repo.split("/")[0]
+    return "EngDawood"
 
 
 def collect_commands() -> list:
@@ -385,10 +395,10 @@ def generate_markdown_table(skills: list, lang: str = "ar") -> str:
     """Generate a clean GitHub-Flavored Markdown table for skills."""
     en = lang == "en"
     lines = [
-        "| Skill | Category | Description | Install / Link |"
+        "| Skill | Owner | Category | Description | Install / Link |"
         if en
-        else "| المهارة (Skill) | التصنيف (Category) | الوصف (Description) | التثبيت والاستخدام (Install / Link) |",
-        "| :--- | :--- | :--- | :--- |",
+        else "| المهارة (Skill) | المالك (Owner) | التصنيف (Category) | الوصف (Description) | التثبيت والاستخدام (Install / Link) |",
+        "| :--- | :--- | :--- | :--- | :--- |",
     ]
 
     for s in skills:
@@ -404,6 +414,7 @@ def generate_markdown_table(skills: list, lang: str = "ar") -> str:
             name_cell = f"**[{s['name']}]({s['url']})**<br>{title} {badge}".replace("<br> ", "<br>")
         else:
             name_cell = f"**[{s['name']}]({s['url']})**<br>{s['title_ar']} {badge}"
+        owner_cell = f"[@{s['owner']}](https://github.com/{s['owner']})"
         cat_cell = f"`{s['category']}`"
         desc_cell = s["description"]
         cmd_cell = (
@@ -411,7 +422,7 @@ def generate_markdown_table(skills: list, lang: str = "ar") -> str:
             if s.get("install_cmd")
             else (f"[View repository]({s['url']})" if en else f"[عرض المستودع]({s['url']})")
         )
-        lines.append(f"| {name_cell} | {cat_cell} | {desc_cell} | {cmd_cell} |")
+        lines.append(f"| {name_cell} | {owner_cell} | {cat_cell} | {desc_cell} | {cmd_cell} |")
 
     return "\n".join(lines)
 
