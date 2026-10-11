@@ -37,11 +37,7 @@
 ### 1. Install a specific skill with `npx skills`
 You can install any skill from this repository into your project or system-wide:
 ```bash
-# Install a skill into the current project
 npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling
-
-# Install a skill globally for all Claude Code and Cursor projects
-npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-localization-rtl -g
 ```
 
 ### 2. Manual install with Claude Code

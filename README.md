@@ -43,11 +43,7 @@
 ### 1. تثبيت مهارة محددة عبر `npx skills` (Universal Skills)
 يمكنك تثبيت أي مهارة من هذا المستودع مباشرة في مشروعك أو على مستوى نظامك العام:
 ```bash
-# تثبيت مهارة محددة في مجلد المشروع الحالي
 npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling
-
-# تثبيت المهارة عامةً لجميع مشاريع Claude Code و Cursor
-npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-localization-rtl -g
 ```
 
 ### 2. التثبيت اليدوي مع Claude Code
