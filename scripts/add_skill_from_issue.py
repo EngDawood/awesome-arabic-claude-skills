@@ -40,6 +40,10 @@ def main():
         print("Error: Required fields 'Skill Name' or 'URL' missing from issue body.", file=sys.stderr)
         sys.exit(1)
 
+    if not re.match(r"^https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+", url):
+        print(f"Error: URL must be a github.com repository link, got '{url}'.", file=sys.stderr)
+        sys.exit(1)
+
     # Sanitize name
     name = re.sub(r"[^a-z0-9-]", "-", name.lower()).strip("-")
 
@@ -69,8 +73,9 @@ def main():
             "category": category or "Community",
             "description": description or "",
             "url": url,
-            "install_cmd": install_cmd or f"npx skills add {url.replace('https://github.com/', '')}",
         }
+        if install_cmd:
+            new_entry["install_cmd"] = install_cmd
         sources.append(new_entry)
         print(f"Added new skill '{name}' to sources.json.")
 

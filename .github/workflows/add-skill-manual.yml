@@ -1,0 +1,62 @@
+name: Add Skill (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'GitHub repo (owner/repo) or repo URL'
+        required: true
+      dir:
+        description: 'Skill folder inside the repo (leave empty for the whole repo)'
+        required: false
+        default: ''
+      title_ar:
+        description: 'Arabic title (optional)'
+        required: false
+        default: ''
+      category:
+        description: 'Category (optional)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: catalog-update
+  cancel-in-progress: false
+
+jobs:
+  add-skill:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ inputs.repo }}
+      DIR: ${{ inputs.dir }}
+      TITLE_AR: ${{ inputs.title_ar }}
+      CATEGORY: ${{ inputs.category }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Register Skill
+        run: python scripts/add_source.py
+
+      - name: Auto-Sync Skills Catalog
+        run: python scripts/sync_skills.py
+
+      - name: Validate Catalog
+        run: python scripts/check_catalog.py
+
+      - name: Open Pull Request
+        run: |
+          scripts/open_catalog_pr.sh \
+            "add-skill/manual-${{ github.run_id }}" \
+            "feat(skills): add skill from $REPO" \
+            "Added manually from the Actions tab."
