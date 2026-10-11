@@ -241,7 +241,7 @@ def sync_external_repositories(sources: list) -> dict:
                         install_cmd = item.get("install_cmd") or (
                             f"npx skills add {repo}"
                             if not source_rel
-                            else f"npx skills add {repo} --skill {skill_name}"
+                            else f"npx skills add {repo} --skill {fm.get('name') or Path(source_rel).name}"
                         )
 
                         folder_target_name = Path(target_rel).name
