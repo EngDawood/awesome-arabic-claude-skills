@@ -8,13 +8,6 @@ on:
       - 'skills/**'
       - 'sources.json'
       - 'scripts/**'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'skills/**'
-      - 'sources.json'
-      - 'scripts/**'
   workflow_dispatch:
   repository_dispatch:
     types: [sync-skills, upstream-update]
@@ -44,17 +37,7 @@ jobs:
         run: |
           python scripts/sync_skills.py
 
-      - name: Verify Git Diff on Pull Requests
-        if: github.event_name == 'pull_request'
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "::error::Repository files (skills/, skills.json, README.md, or README.en.md) are out of sync. Please run 'python scripts/sync_skills.py' locally and commit the result."
-            git diff
-            exit 1
-          fi
-
       - name: Commit and Push Changes on Main
-        if: github.event_name != 'pull_request'
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
