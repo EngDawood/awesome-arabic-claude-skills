@@ -6,6 +6,8 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Language: Arabic & English](https://img.shields.io/badge/Language-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9%20%7C%20English-blue.svg)](#)
 
+**العربية | [English](README.en.md)**
+
 > **قائمة مختارة ومكتبة مهارات مفتوحة المصدر لـ Claude Code ووكلاء الذكاء الاصطناعي، مخصصة للغة العربية، تعريب البرمجيات (RTL)، الترجمة المرئية، صياغة المحتوى، والمعالجة اللغوية.**  
 > *A curated directory and open-source skill library for Claude Code and AI agents, specifically engineered for the Arabic language, RTL localization, subtitling, copywriting, and NLP.*
 

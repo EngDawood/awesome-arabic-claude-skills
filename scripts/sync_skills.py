@@ -20,6 +20,7 @@ COMMANDS_DIR = ROOT_DIR / "commands"
 SOURCES_FILE = ROOT_DIR / "sources.json"
 OUTPUT_REGISTRY = ROOT_DIR / "skills.json"
 README_FILE = ROOT_DIR / "README.md"
+README_EN_FILE = ROOT_DIR / "README.en.md"
 
 TABLE_START_MARKER = "<!-- SKILLS_TABLE_START -->"
 TABLE_END_MARKER = "<!-- SKILLS_TABLE_END -->"
@@ -380,41 +381,51 @@ def collect_commands() -> list:
     return commands
 
 
-def generate_markdown_table(skills: list) -> str:
+def generate_markdown_table(skills: list, lang: str = "ar") -> str:
     """Generate a clean GitHub-Flavored Markdown table for skills."""
+    en = lang == "en"
     lines = [
-        "| المهارة (Skill) | التصنيف (Category) | الوصف (Description) | التثبيت والاستخدام (Install / Link) |",
+        "| Skill | Category | Description | Install / Link |"
+        if en
+        else "| المهارة (Skill) | التصنيف (Category) | الوصف (Description) | التثبيت والاستخدام (Install / Link) |",
         "| :--- | :--- | :--- | :--- |",
     ]
 
     for s in skills:
         if s["type"] == "synced":
-            badge = f"*(مزامنة من GitHub / Synced)*"
+            badge = "*(Synced from GitHub)*" if en else "*(مزامنة من GitHub / Synced)*"
         elif s["type"] == "native":
-            badge = "*(مدمجة / Native)*"
+            badge = "*(Native)*" if en else "*(مدمجة / Native)*"
         else:
-            badge = "*(خارجية / External)*"
+            badge = "*(External)*" if en else "*(خارجية / External)*"
 
-        name_cell = f"**[{s['name']}]({s['url']})**<br>{s['title_ar']} {badge}"
+        if en:
+            title = s["title_ar"] if s["title_ar"] != s["name"] else ""
+            name_cell = f"**[{s['name']}]({s['url']})**<br>{title} {badge}".replace("<br> ", "<br>")
+        else:
+            name_cell = f"**[{s['name']}]({s['url']})**<br>{s['title_ar']} {badge}"
         cat_cell = f"`{s['category']}`"
         desc_cell = s["description"]
         cmd_cell = (
             f"`{s['install_cmd']}`"
             if s.get("install_cmd")
-            else f"[عرض المستودع]({s['url']})"
+            else (f"[View repository]({s['url']})" if en else f"[عرض المستودع]({s['url']})")
         )
         lines.append(f"| {name_cell} | {cat_cell} | {desc_cell} | {cmd_cell} |")
 
     return "\n".join(lines)
 
 
-def generate_commands_table(commands: list) -> str:
+def generate_commands_table(commands: list, lang: str = "ar") -> str:
     """Generate a markdown table for Claude Code slash commands."""
+    en = lang == "en"
     if not commands:
-        return "*لا توجد أوامر مخصصة حالياً.*"
+        return "*No custom commands yet.*" if en else "*لا توجد أوامر مخصصة حالياً.*"
 
     lines = [
-        "| الأمر (Slash Command) | المعاملات (Arguments) | الوصف (Description) | ملف الأمر (File) |",
+        "| Slash Command | Arguments | Description | File |"
+        if en
+        else "| الأمر (Slash Command) | المعاملات (Arguments) | الوصف (Description) | ملف الأمر (File) |",
         "| :--- | :--- | :--- | :--- |",
     ]
     for c in commands:
@@ -426,12 +437,12 @@ def generate_commands_table(commands: list) -> str:
     return "\n".join(lines)
 
 
-def update_readme(skills_table_md: str, commands_table_md: str):
-    """Replace content between markers in README.md."""
-    if not README_FILE.exists():
+def update_readme(skills_table_md: str, commands_table_md: str, readme_file: Path = README_FILE):
+    """Replace content between markers in a README file."""
+    if not readme_file.exists():
         return
 
-    content = README_FILE.read_text(encoding="utf-8")
+    content = readme_file.read_text(encoding="utf-8")
 
     # Update skills table
     skills_pattern = (
@@ -457,8 +468,8 @@ def update_readme(skills_table_md: str, commands_table_md: str):
             flags=re.DOTALL,
         )
 
-    README_FILE.write_text(content, encoding="utf-8")
-    print("Updated README.md tables.")
+    readme_file.write_text(content, encoding="utf-8")
+    print(f"Updated {readme_file.name} tables.")
 
 
 def main():
@@ -503,6 +514,11 @@ def main():
     skills_table_md = generate_markdown_table(native_skills)
     commands_table_md = generate_commands_table(commands)
     update_readme(skills_table_md, commands_table_md)
+    update_readme(
+        generate_markdown_table(native_skills, "en"),
+        generate_commands_table(commands, "en"),
+        README_EN_FILE,
+    )
 
     print("Auto-sync completed successfully!")
 
