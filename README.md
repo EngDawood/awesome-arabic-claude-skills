@@ -49,9 +49,7 @@ npx skills add EngDawood/awesome-arabic-claude-skills --skill arabic-subtitling
 ### 2. التثبيت اليدوي مع Claude Code
 انسخ مجلد المهارة المطلوبة من `skills/` إلى مجلد مهارات كلود في مشروعك:
 ```bash
-# في مجلد مشروعك
-mkdir -p .claude/skills
-cp -r /path/to/awesome-arabic-claude-skills/skills/arabic-localization-rtl .claude/skills/
+mkdir -p .claude/skills && cp -r /path/to/awesome-arabic-claude-skills/skills/arabic-localization-rtl .claude/skills/
 ```
 
 أو أضفها إلى إعدادات كلود العامة في جهازك:
