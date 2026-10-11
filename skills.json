@@ -49,13 +49,13 @@
       "name": "ppt-master",
       "title_ar": "ppt-master",
       "category": "General",
-      "type": "synced",
-      "upstream_repo": "hugohe3/ppt-master",
-      "owner": "hugohe3",
+      "type": "native",
+      "upstream_repo": null,
+      "owner": "EngDawood",
       "description": "> AI-driven presentation workflow for generating editable PPTX decks and slides, reconstructing page visuals, creating reusable Brand/Style/Layout/Deck workspaces, filling native PPTX templates, and enhancing finished PPTX files. Use when the user asks to create, generate, reconstruct, regenerate, beautify, redesign, template, fill, or enhance a presentation, PPT, PPTX, slide deck, or courseware — including adding narration or animation to one — requests a presentation-authored narrated/self-running video, or mentions ppt-master.",
       "path": "skills/ppt-master/SKILL.md",
-      "url": "https://github.com/hugohe3/ppt-master/tree/main/skills/ppt-master",
-      "install_cmd": "npx skills add hugohe3/ppt-master --skill ppt-master"
+      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/ppt-master",
+      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill ppt-master"
     },
     {
       "id": "video-caption-mcp",
