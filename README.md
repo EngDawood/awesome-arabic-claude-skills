@@ -97,7 +97,6 @@ mkdir -p .claude/skills && cp -r /path/to/awesome-arabic-claude-skills/skills/ar
 | الأداة / المخدم | الوصف | الرابط |
 | :--- | :--- | :--- |
 | **Arabic Scholar MCP** | مخدم MCP للبحث الأكاديمي والتحقيق والوصول للمصادر التراثية والإسلامية | [المستودع](https://github.com/EngDawood/arabic-scholar-mcp-server) |
-| **Mandumah MCP** | تكامل واسترجاع الأبحاث والرسائل العلمية من قاعدة بيانات دار المنظومة | [المستودع](https://github.com/EngDawood/arabic-scholar-mcp-server) |
 | **Arabic Video Subtitles Skill** | دليل معايير وقواعد الترجمة المرئية والتفريغ النصي العربي (Netflix TTSG) | [المستودع](https://github.com/EngDawood/arabic-video-subtitles-skill) |
 | **Thmanyah Font Web** | حزمة وتطبيق ويب لخطوط ثمانية ودعم التيبوغرافيا العربية الحديثة | [المستودع](https://github.com/EngDawood/thmanyah-font-web) |
 
