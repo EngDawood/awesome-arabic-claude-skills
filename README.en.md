@@ -7,7 +7,7 @@
 
 **English | [العربية](README.md)**
 
-> A curated directory and open-source skill library for Claude Code and AI agents, built for the Arabic language: RTL localization, subtitling, and NLP.
+> A curated directory and open-source skill library for Claude Code and AI agents, built for the Arabic language: RTL localization, documents, and subtitling.
 
 ---
 

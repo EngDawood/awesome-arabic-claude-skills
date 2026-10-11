@@ -8,8 +8,8 @@
 
 **العربية | [English](README.en.md)**
 
-> **قائمة مختارة ومكتبة مهارات مفتوحة المصدر لـ Claude Code ووكلاء الذكاء الاصطناعي، مخصصة للغة العربية، تعريب البرمجيات (RTL)، الترجمة المرئية، صياغة المحتوى، والمعالجة اللغوية.**  
-> *A curated directory and open-source skill library for Claude Code and AI agents, specifically engineered for the Arabic language, RTL localization, subtitling, copywriting, and NLP.*
+> **قائمة مختارة ومكتبة مهارات مفتوحة المصدر لـ Claude Code ووكلاء الذكاء الاصطناعي، مخصصة للغة العربية، تعريب البرمجيات (RTL)، المستندات، والترجمة المرئية.**  
+> *A curated directory and open-source skill library for Claude Code and AI agents, specifically engineered for the Arabic language, RTL localization, documents, and subtitling.*
 
 ---
 
