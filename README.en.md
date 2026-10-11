@@ -90,10 +90,10 @@ Model Context Protocol (MCP) servers and tools that support Arabic content and r
 
 | Tool / Server | Description | Link |
 | :--- | :--- | :--- |
-| **Arabic Scholar MCP** | MCP server for academic research, textual verification, and access to heritage and Islamic sources | [Repository](https://github.com/EngDawood) |
-| **Mandumah MCP** | Search and retrieve research papers and theses from the Mandumah database | [Repository](https://github.com/EngDawood) |
+| **Arabic Scholar MCP** | MCP server for academic research, textual verification, and access to heritage and Islamic sources | [Repository](https://github.com/EngDawood/arabic-scholar-mcp-server) |
+| **Mandumah MCP** | Search and retrieve research papers and theses from the Mandumah database | [Repository](https://github.com/EngDawood/arabic-scholar-mcp-server) |
 | **Arabic Video Subtitles Skill** | Standards and rules for Arabic subtitling and transcription (Netflix TTSG) | [Repository](https://github.com/EngDawood/arabic-video-subtitles-skill) |
-| **Thmanyah Font Web** | Web package for the Thmanyah fonts and modern Arabic typography | [Repository](https://github.com/EngDawood) |
+| **Thmanyah Font Web** | Web package for the Thmanyah fonts and modern Arabic typography | [Repository](https://github.com/EngDawood/thmanyah-font-web) |
 
 ---
 
