@@ -104,6 +104,9 @@ def extract_tar_folder(tar: tarfile.TarFile, root_prefix: str, source_rel: str, 
                 continue
 
             target_file = dest_dir / rel_subpath
+            if not target_file.resolve().is_relative_to(dest_dir.resolve()):
+                print(f"Warning: skipping unsafe path in archive: {member.name}", file=sys.stderr)
+                continue
             if member.isdir():
                 target_file.mkdir(parents=True, exist_ok=True)
             elif member.isfile():

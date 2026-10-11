@@ -17,6 +17,9 @@ jobs:
   add-skill:
     if: github.event.label.name == 'add-skill'
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -29,38 +32,38 @@ jobs:
       - name: Parse Issue and Register Skill
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-        run: |
-          python scripts/add_skill_from_issue.py
+        run: python scripts/add_skill_from_issue.py
 
       - name: Auto-Sync Skills Catalog
-        run: |
-          python scripts/sync_skills.py
+        run: python scripts/sync_skills.py
 
-      - name: Commit and Push Update
+      - name: Validate Catalog
+        run: python scripts/check_catalog.py
+
+      - name: Open Pull Request
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A skills/ commands/ sources.json skills.json README.md README.en.md
-          if git diff --cached --quiet; then
-            echo "No catalog changes (skill already registered)."
+          scripts/open_catalog_pr.sh \
+            "add-skill/issue-$ISSUE_NUMBER" \
+            "feat(skills): add skill from issue #$ISSUE_NUMBER" \
+            "Closes #$ISSUE_NUMBER"
+
+      - name: Comment on Issue
+        run: |
+          url=$(gh pr view "add-skill/issue-$ISSUE_NUMBER" --json url -q .url 2>/dev/null || true)
+          if [ -n "$url" ]; then
+            gh issue comment "$ISSUE_NUMBER" --body "شكراً لمساهمتك! تم فتح طلب دمج للمراجعة: $url
+
+          Thank you! A pull request is open for review: $url"
           else
-            git commit -m "feat(skills): add skill from issue #${{ github.event.issue.number }} [skip ci]"
-            git push
+            gh issue comment "$ISSUE_NUMBER" --body "هذه المهارة موجودة بالفعل في الفهرس.
+
+          This skill is already in the catalog."
+            gh issue close "$ISSUE_NUMBER"
           fi
 
-      - name: Comment and Close Issue
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🎉 شكراً لمساهمتك! تم التحقق من المهارة وإضافتها تلقائياً إلى الفهرس و `skills.json`.\n\nThank you! Your skill has been automatically verified and added to the catalog.'
-            });
-            github.rest.issues.update({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'closed'
-            });
+      - name: Comment on Failure
+        if: failure()
+        run: |
+          gh issue comment "$ISSUE_NUMBER" --body "تعذر التحقق من المهارة. راجع سجل التشغيل: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+          Could not validate the skill. See the run log: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

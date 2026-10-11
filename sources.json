@@ -9,8 +9,8 @@
   {
     "repo": "EngDawood/video-caption",
     "dir": "skills/video-caption-mcp"
-  },{
-
-        "repo": "muhmoosa/claude-arabic-docs"}
-  
+  },
+  {
+    "repo": "muhmoosa/claude-arabic-docs"
+  }
 ]
