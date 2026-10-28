@@ -50,6 +50,14 @@ Or add it to your global Claude settings:
 - **Linux / macOS**: `~/.claude/skills/`
 - **Windows**: `%USERPROFILE%\.claude\skills\`
 
+### 3. Install as a Claude Code plugin
+This repository is a Claude Code plugin marketplace, and every skill in it is its own plugin. Inside Claude Code:
+```
+/plugin marketplace add EngDawood/awesome-arabic-claude-skills
+/plugin install doc-to-word-rtl@awesome-arabic-claude-skills
+```
+To browse every plugin, run `/plugin` and open the Discover tab. `.claude-plugin/marketplace.json` is generated from the skills catalog, so a new skill appears in the marketplace without manual edits.
+
 ---
 
 ## Auto-Synced Skills Catalog
@@ -76,10 +84,7 @@ Skills include slash commands you can call directly inside Claude Code:
 
 <!-- COMMANDS_TABLE_START -->
 
-| Slash Command | Arguments | Description | File |
-| :--- | :--- | :--- | :--- |
-| `/check-subtitles` | `file_path` | Run automated and manual QC checks on Arabic SRT or VTT subtitle files against Netflix TTSG rules. | [`commands/check-subtitles.md`](commands/check-subtitles.md) |
-| `/translate-subtitles` | `text_or_subtitles` | Translate or adapt foreign dialogue into professional Modern Standard Arabic subtitles following Netflix TTSG and ECR strategies. | [`commands/translate-subtitles.md`](commands/translate-subtitles.md) |
+*No custom commands yet.*
 
 <!-- COMMANDS_TABLE_END -->
 

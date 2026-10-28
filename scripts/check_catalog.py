@@ -62,7 +62,17 @@ def main() -> int:
         if registry.get("commands") != m.collect_commands():
             errors.append("skills.json 'commands' is out of date. Run 'python scripts/sync_skills.py'.")
 
-        # 4. README tables must match skills.json
+        # 4. the plugin marketplace must match skills.json
+        try:
+            marketplace = json.loads(m.MARKETPLACE_FILE.read_text(encoding="utf-8"))
+            if marketplace != m.build_marketplace(registry.get("skills", [])):
+                errors.append(".claude-plugin/marketplace.json is out of sync with skills.json. Run 'python scripts/sync_skills.py'.")
+        except FileNotFoundError:
+            errors.append(".claude-plugin/marketplace.json is missing. Run 'python scripts/sync_skills.py'.")
+        except Exception as e:
+            errors.append(f".claude-plugin/marketplace.json is not valid JSON: {e}")
+
+        # 5. README tables must match skills.json
         for readme, lang in ((m.README_FILE, "ar"), (m.README_EN_FILE, "en")):
             if not readme.exists():
                 errors.append(f"{readme.name} is missing.")

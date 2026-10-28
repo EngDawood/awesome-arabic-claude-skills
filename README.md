@@ -20,6 +20,7 @@
   - [طريقة التثبيت والاستخدام / Installation \& Usage](#طريقة-التثبيت-والاستخدام--installation--usage)
     - [1. تثبيت مهارة محددة عبر `npx skills` (Universal Skills)](#1-تثبيت-مهارة-محددة-عبر-npx-skills-universal-skills)
     - [2. التثبيت اليدوي مع Claude Code](#2-التثبيت-اليدوي-مع-claude-code)
+    - [3. التثبيت كإضافة (Plugin) من متجر Claude Code](#3-التثبيت-كإضافة-plugin-من-متجر-claude-code)
   - [فهرس المهارات المحدث تلقائياً / Auto-Synced Skills Catalog](#فهرس-المهارات-المحدث-تلقائياً--auto-synced-skills-catalog)
   - [أوامر كلود السريعة / Claude Code Slash Commands](#أوامر-كلود-السريعة--claude-code-slash-commands)
   - [أدوات ومخدمات MCP عربية / Arabic MCP Servers \& Tools](#أدوات-ومخدمات-mcp-عربية--arabic-mcp-servers--tools)
@@ -56,6 +57,14 @@ mkdir -p .claude/skills && cp -r /path/to/awesome-arabic-claude-skills/skills/ar
 - **نظام لينكس / ماك**: `~/.claude/skills/`
 - **نظام ويندوز**: `%USERPROFILE%\.gemini\config\skills\` أو `%USERPROFILE%\.claude\skills\`
 
+### 3. التثبيت كإضافة (Plugin) من متجر Claude Code
+المستودع متجر إضافات (Plugin Marketplace) لـ Claude Code، وكل مهارة فيه إضافة مستقلة تثبّتها وحدها. داخل Claude Code:
+```
+/plugin marketplace add EngDawood/awesome-arabic-claude-skills
+/plugin install doc-to-word-rtl@awesome-arabic-claude-skills
+```
+ولعرض كل الإضافات المتاحة: `/plugin` ثم تبويب Discover. يُولَّد ملف `.claude-plugin/marketplace.json` تلقائياً من فهرس المهارات، فكل مهارة جديدة تظهر في المتجر دون تعديل يدوي.
+
 ---
 
 ## فهرس المهارات المحدث تلقائياً / Auto-Synced Skills Catalog
@@ -82,10 +91,7 @@ mkdir -p .claude/skills && cp -r /path/to/awesome-arabic-claude-skills/skills/ar
 
 <!-- COMMANDS_TABLE_START -->
 
-| الأمر (Slash Command) | المعاملات (Arguments) | الوصف (Description) | ملف الأمر (File) |
-| :--- | :--- | :--- | :--- |
-| `/check-subtitles` | `file_path` | Run automated and manual QC checks on Arabic SRT or VTT subtitle files against Netflix TTSG rules. | [`commands/check-subtitles.md`](commands/check-subtitles.md) |
-| `/translate-subtitles` | `text_or_subtitles` | Translate or adapt foreign dialogue into professional Modern Standard Arabic subtitles following Netflix TTSG and ECR strategies. | [`commands/translate-subtitles.md`](commands/translate-subtitles.md) |
+*لا توجد أوامر مخصصة حالياً.*
 
 <!-- COMMANDS_TABLE_END -->
 

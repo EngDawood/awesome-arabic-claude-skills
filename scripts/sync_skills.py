@@ -21,6 +21,7 @@ SOURCES_FILE = ROOT_DIR / "sources.json"
 OUTPUT_REGISTRY = ROOT_DIR / "skills.json"
 README_FILE = ROOT_DIR / "README.md"
 README_EN_FILE = ROOT_DIR / "README.en.md"
+MARKETPLACE_FILE = ROOT_DIR / ".claude-plugin" / "marketplace.json"
 
 TABLE_START_MARKER = "<!-- SKILLS_TABLE_START -->"
 TABLE_END_MARKER = "<!-- SKILLS_TABLE_END -->"
@@ -259,7 +260,8 @@ def sync_external_repositories(sources: list) -> dict:
 
                     # 3. Sync commands if present in repo
                     commands_source = item.get("commands_source", "commands").strip("/")
-                    commands_target = item.get("commands_target", "commands").strip("/")
+                    # Opt-in: set "commands_target" on a source to copy its commands/ here.
+                    commands_target = item.get("commands_target", "").strip("/")
                     has_commands = any(
                         m.name.startswith(f"{root_prefix}/{commands_source}/") for m in members
                     )
@@ -486,6 +488,44 @@ def update_readme(skills_table_md: str, commands_table_md: str, readme_file: Pat
     print(f"Updated {readme_file.name} tables.")
 
 
+def build_marketplace(skills: list) -> dict:
+    """Claude Code plugin marketplace: one plugin per skill folder.
+
+    Each plugin's source is the skill folder itself, so a plugin carries only
+    that skill (SKILL.md at the plugin root loads as a single skill) and none of
+    the repo-level files such as commands/ or .mcp.json.
+    """
+    plugins = []
+    for s in skills:
+        folder = s["path"].split("/")[1]
+        entry = {
+            "name": s["name"],
+            "source": f"./skills/{folder}",
+            "description": s["description"],
+            "author": {"name": s["owner"]},
+            "homepage": s["url"],
+            "category": s["category"],
+        }
+        plugins.append(entry)
+    return {
+        "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+        "name": "awesome-arabic-claude-skills",
+        "owner": {"name": "EngDawood", "url": "https://github.com/EngDawood"},
+        "metadata": {
+            "description": "Arabic skills for Claude Code: RTL engineering, Arabic documents, subtitling and more. Each skill installs as its own plugin.",
+        },
+        "plugins": plugins,
+    }
+
+
+def write_marketplace(skills: list) -> None:
+    MARKETPLACE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(MARKETPLACE_FILE, "w", encoding="utf-8") as f:
+        json.dump(build_marketplace(skills), f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    print(f"Generated {MARKETPLACE_FILE.relative_to(ROOT_DIR)}")
+
+
 def main():
     print("Starting Arabic Claude Skills auto-sync...")
 
@@ -523,6 +563,9 @@ def main():
     with open(OUTPUT_REGISTRY, "w", encoding="utf-8") as f:
         json.dump(registry_data, f, ensure_ascii=False, indent=2)
     print(f"Generated {OUTPUT_REGISTRY.relative_to(ROOT_DIR)}")
+
+    # 4b. Claude Code plugin marketplace
+    write_marketplace(native_skills)
 
     # 5. Update README tables
     skills_table_md = generate_markdown_table(native_skills)
