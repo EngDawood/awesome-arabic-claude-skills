@@ -68,6 +68,7 @@ python3 scripts/md_to_docx_en.py paper.md paper.docx --paper a4
 | Captions | `جدول (n): ...` bold and centered, kept with its table |
 | Lists | Each numbered list restarts at 1 |
 | References | Hanging indent 0.635 cm |
+| Pictures and charts | Centered, at most the text width, caption below |
 
 Options: `--ar-font`, `--en-font`, `--size`, `--table-size`, `--color`, `--line`, `--margins`, `--paper a4|letter`, `--keep-byline`, `--dir rtl|ltr|auto`.
 
@@ -86,7 +87,8 @@ Options: `--font`, `--size`, `--table-size`, `--line`, `--margins`, `--paper a4|
 
 ## Limits
 
-- Images, charts and comments in the doc are not carried over (the markdown export drops them).
+- Images and charts are carried over: the skill fetches each picture from the doc and screenshots each chart, then places them with their captions. Comments are not carried over.
+- A chart arrives in Word as a static picture, not an editable chart.
 - Footnotes become plain text.
 - The visual check runs in LibreOffice, which may not have Traditional Arabic; it judges layout, not typeface.
 

@@ -5,7 +5,7 @@ Claude Doc markdown export -> house-style RTL .docx.
 Usage: python3 md_to_docx_rtl.py INPUT OUTPUT.docx [options]
 INPUT: a .md file, or the JSON file Claude Docs `export` saves ({"data": {"bytes_b64": ...}}).
 """
-import argparse, base64, json, re, sys
+import argparse, base64, json, os, re, sys
 from docx import Document
 from docx.enum.section import WD_ORIENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -22,6 +22,9 @@ BYLINE_RE = re.compile(r'^\s*([A-Z][a-z]{2} \d{1,2}, \d{4}|\d{4}-\d{2}-\d{2})?\s
 INLINE_RE = re.compile(r'(\*\*[^*]+\*\*|__[^_]+__|\*[^*\s][^*]*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))')
 CENTER_H_RE = re.compile(r'^(المحور|الفصل|مراجع|المراجع|قائمة|ملخص|Chapter|References|Abstract)')
 CAPTION_RE = re.compile(r'^(جدول|شكل|الجدول|الشكل|Table|Figure)\s*\(?\s*\d')
+# Start-aligned = no jc at all. In a right-to-left paragraph Word reads jc="right" as the line's
+# end, i.e. the LEFT edge; leaving jc unset aligns to the start, which is the right edge.
+START = None
 SOURCE_RE = re.compile(r'^(المصدر|Source)\s*:')
 
 
@@ -198,7 +201,7 @@ def add_heading(doc, text, level, cfg):
     sizes = {1: cfg.size + 6, 2: cfg.size + 2, 3: cfg.size, 4: cfg.size}
     add_inline(p, text, cfg, rtl, size=sizes[min(level, 4)], bold=True)
     centered = level == 1 or bool(CENTER_H_RE.match(text))
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER if centered else (WD_ALIGN_PARAGRAPH.RIGHT if rtl else WD_ALIGN_PARAGRAPH.LEFT)
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER if centered else START
     para_spacing(p, cfg, before=10 if level <= 2 else 6, after=6)
     p.paragraph_format.keep_with_next = True
 
@@ -215,7 +218,7 @@ def add_paragraph(doc, text, cfg):
         return
     if SOURCE_RE.match(text):
         add_inline(p, text, cfg, rtl, size=cfg.size - 2)
-        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT if rtl else WD_ALIGN_PARAGRAPH.LEFT
+        p.alignment = START
         para_spacing(p, cfg, before=4, after=10)
         return
     add_inline(p, text, cfg, rtl, size=cfg.size)
@@ -228,7 +231,7 @@ def add_reference(doc, text, cfg):
     p = doc.add_paragraph()
     set_par_dir(p, rtl)
     add_inline(p, text, cfg, rtl, size=cfg.size)
-    p.alignment = WD_ALIGN_PARAGRAPH.RIGHT if rtl else WD_ALIGN_PARAGRAPH.LEFT
+    p.alignment = START
     pf = p.paragraph_format
     pf.left_indent = Cm(0.635); pf.first_line_indent = Cm(-0.635)
     para_spacing(p, cfg, after=6)
@@ -276,6 +279,58 @@ def add_list_item(doc, text, ordered, level, cfg, number):
     para_spacing(p, cfg, after=4, line=max(cfg.line, 1.16))
 
 
+# ---------------- images ----------------
+# Claude Docs' markdown export drops pictures ("&#91;image: <alt>\]") and charts/widgets
+# ("&#91;embedded content: <caption>\]"), leaving those placeholders.
+# The skill fetches each picture and passes them in document order with --images (a JSON list of
+# {"alt", "path"}; a chart's "alt" is its caption); plain markdown images "![alt](local/path.png)" also work.
+IMG_RE = re.compile(r'^(?:&#91;|\\?\[)image:\s*(.*?)\\?\]$|^!\[([^\]]*)\]\(([^)\s]+)\)$'
+                    r'|^(?:&#91;|\\?\[)embedded content:\s*(.*?)\\?\]$')
+
+
+def load_images(path):
+    if not path:
+        return []
+    data = json.load(open(path, encoding='utf-8'))
+    return [d if isinstance(d, dict) else {'alt': '', 'path': d} for d in data]
+
+
+def add_image(doc, cfg, src):
+    """Centered picture, scaled down to the text width (and at most 18 cm tall). False if the file is missing."""
+    from docx.image.image import Image as DocxImage
+    if not src or not os.path.exists(src):
+        return False
+    img = DocxImage.from_file(src)
+    w_cm = img.px_width / (img.horz_dpi or 96) * 2.54
+    h_cm = img.px_height / (img.vert_dpi or 96) * 2.54
+    usable = (21.0 if cfg.paper == 'a4' else 21.59) - 2 * cfg.margins
+    scale = min(1.0, usable / w_cm, 18.0 / h_cm)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    pf = p.paragraph_format
+    pf.space_before = Pt(6); pf.space_after = Pt(4); pf.line_spacing = 1.0
+    pf.keep_with_next = True
+    p.add_run().add_picture(src, width=Cm(w_cm * scale))
+    return True
+
+
+def handle_image(doc, cfg, match, placeholder):
+    """Returns (placeholder_text or None, caption or None) for the caller to write as paragraphs."""
+    caption = match.group(4)
+    alt = (match.group(1) or match.group(2) or caption or '').strip()
+    src = match.group(3)
+    if src is None:
+        entry = cfg.images.pop(0) if cfg.images else None
+        src = entry.get('path') if entry else None
+        if entry and entry.get('alt') and alt and entry['alt'].strip() != alt:
+            print(f'warning: image order mismatch: placeholder "{alt[:40]}" got "{entry["alt"][:40]}"', file=sys.stderr)
+    if add_image(doc, cfg, src):
+        cfg.img_ok += 1
+        return None, (caption.strip() if caption else None)
+    cfg.img_missing.append(alt[:40])
+    return placeholder.format(alt=alt), None
+
+
 def split_row(line):
     s = line.strip()
     if s.startswith('|'): s = s[1:]
@@ -314,7 +369,7 @@ def add_table(doc, rows, cfg):
             set_par_dir(p, crtl)
             add_inline(p, txt, cfg, crtl, size=cfg.table_size, bold=(ri == 0))
             numeric = bool(re.fullmatch(r'[\d٠-٩.,%\s/\-–]+[مهـ]*', txt)) or txt == ''
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER if (ri == 0 or numeric) else (WD_ALIGN_PARAGRAPH.RIGHT if crtl else WD_ALIGN_PARAGRAPH.LEFT)
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER if (ri == 0 or numeric) else START
             para_spacing(p, cfg, before=2, after=2, line=1.0)
             tcPr = cell._tc.get_or_add_tcPr()
             va = OxmlElement('w:vAlign'); va.set(qn('w:val'), 'center'); tcPr.append(va)
@@ -376,6 +431,14 @@ def convert(md, out, cfg):
                 if j < n and ((BYLINE_RE.match(lines[j].strip()) and '·' in lines[j]) or re.match(r'^\s*@\S+\s*$', lines[j])):
                     i = j
             i += 1; continue
+        im = IMG_RE.match(s)
+        if im:
+            cfg.after_table = False
+            text, caption = handle_image(doc, cfg, im, '[صورة: {alt}]')
+            for t in (text, caption):
+                if t:
+                    add_paragraph(doc, t, cfg)
+            i += 1; continue
         if s.startswith('|') and i + 1 < n and re.match(r'^\s*\|?\s*:?-{2,}', lines[i + 1]):
             rows = [split_row(s)]
             i += 2
@@ -420,7 +483,10 @@ def main():
     ap.add_argument('--paper', default='a4', choices=['a4', 'letter'])
     ap.add_argument('--keep-byline', action='store_true')
     ap.add_argument('--dir', default='auto', choices=['auto', 'rtl', 'ltr'])
+    ap.add_argument('--images', help='JSON list of {"alt", "path"} in document order')
     cfg = ap.parse_args()
+    cfg.images = load_images(cfg.images)
+    cfg.img_ok, cfg.img_missing = 0, []
     cfg.after_table = False
     md = load_markdown(cfg.input)
     if cfg.dir == 'auto':
@@ -429,6 +495,8 @@ def main():
         cfg.doc_rtl = cfg.dir == 'rtl'
     convert(md, cfg.output, cfg)
     print(f'OK -> {cfg.output}  (direction: {"RTL" if cfg.doc_rtl else "LTR"})')
+    print(f'images: {cfg.img_ok} embedded, {len(cfg.img_missing)} missing'
+          + (f' ({", ".join(cfg.img_missing)})' if cfg.img_missing else ''))
 
 
 if __name__ == '__main__':
