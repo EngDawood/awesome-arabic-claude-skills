@@ -1,95 +1,115 @@
+<div dir="rtl">
+
 # doc-to-word-rtl
 
-> A Claude skill that turns a Claude Doc into a Word file ready to hand in: Arabic docs come out right-to-left in a Saudi thesis style, English docs in APA 7. Arabic version: [README.ar.md](./README.ar.md)
+> مهارة لـ Claude تحوّل مستند Claude Doc إلى ملف ورد جاهز للتسليم: المستند العربي يخرج من اليمين لليسار بتنسيق الرسائل الجامعية السعودية، والإنجليزي بتنسيق APA 7. النسخة الإنجليزية: [README.en.md](./README.en.md)
 
-## Why
+## لماذا؟
 
-Claude Docs can export to `.docx`, but that export carries no right-to-left settings. Arabic paragraphs come out left-aligned and tables read from the wrong side, so every Arabic chapter needs manual reformatting in Word. This skill replaces that export with two small scripts that build the file in the right direction and the right style from the start.
+يتيح Claude Docs تصدير المستند بصيغة `.docx`، لكن هذا التصدير لا يضبط الاتجاه من اليمين لليسار. فتخرج الفقرات العربية محاذاة لليسار، وتُقرأ الجداول من الجهة الخطأ، ويحتاج كل فصل عربي إلى إعادة تنسيق يدوية في الوورد. تستبدل هذه المهارة ذلك التصدير بسكربتين صغيرين يبنيان الملف بالاتجاه الصحيح والتنسيق المطلوب من البداية.
 
-## What it does
+## ماذا تفعل؟
 
-Give Claude a Claude Doc link and ask for Word. The skill:
+أعطِ Claude رابط المستند واطلب تحويله إلى ورد، فتقوم المهارة بما يلي:
 
-1. Reads the doc and exports each tab as markdown.
-2. Picks the script for the doc's language.
-3. Builds the `.docx`.
-4. Renders a body page, a table page and a list page to check the layout.
-5. Delivers the file named after the doc title.
+1. تقرأ المستند وتصدّر كل تبويب فيه بصيغة markdown.
+2. تختار السكربت المناسب للغة المستند.
+3. تبني ملف `.docx`.
+4. تعرض صفحة من النص وصفحة فيها جدول وصفحة فيها قائمة لتتحقق من التنسيق.
+5. تسلّم الملف باسم عنوان المستند.
 
-If something goes wrong along the way, it names the cause, proposes a fix to the skill itself, and applies it only after you approve and confirm the new output.
+وإذا ظهر خلل أثناء العمل، تحدد سببه وتقترح تعديلاً على المهارة نفسها، ولا تطبّقه إلا بعد موافقتك وتأكيدك أن الناتج الجديد صحيح.
 
-## Installation
+## التثبيت
 
-### Claude Code / any agent that supports `skills`
+### Claude Code أو أي وكيل يدعم `skills`
+
+<div dir="ltr">
 
 ```bash
 npx skills add EngDawood/awesome-arabic-claude-skills --skill doc-to-word-rtl
 ```
 
-### Manual
+</div>
 
-Copy this folder into `.claude/skills/` (project) or `~/.claude/skills/` (user).
+### يدوياً
 
-Requires Python 3 with `python-docx` (`pip install python-docx`). LibreOffice and `pdftoppm` are used only for the visual check.
+انسخ هذا المجلد إلى `.claude/skills/` داخل المشروع، أو إلى `~/.claude/skills/` لحسابك.
 
-## Usage
+تحتاج Python 3 مع مكتبة `python-docx` (`pip install python-docx`). أما LibreOffice و `pdftoppm` فيُستخدمان للتحقق البصري فقط.
+
+## الاستخدام
+
+<div dir="ltr">
 
 ```
-Convert this to Word: https://claude.ai/artifact/XXXX
+حوّل هذا المستند إلى ورد: https://claude.ai/artifact/XXXX
 ```
 ```
-حوّل هذا المستند إلى ورد بخط 14 وتباعد 1.5: https://claude.ai/artifact/XXXX
+حوّله إلى ورد بخط 14 وتباعد 1.5: https://claude.ai/artifact/XXXX
 ```
 
-The scripts also run on their own, on any markdown file:
+</div>
+
+ويمكن تشغيل السكربتين مباشرة على أي ملف markdown:
+
+<div dir="ltr">
 
 ```bash
 python3 scripts/md_to_docx_rtl.py chapter.md chapter.docx
 python3 scripts/md_to_docx_en.py paper.md paper.docx --paper a4
 ```
 
-## House styles
+</div>
 
-### Arabic: `md_to_docx_rtl.py`
+## التنسيقات الافتراضية
 
-| Element | Default |
+### العربي: `md_to_docx_rtl.py`
+
+| العنصر | الافتراضي |
 |---|---|
-| Page | A4, 2.54 cm margins, centered page number |
-| Body | Traditional Arabic 16, justified, line spacing 1.08 |
-| Headings | `#` 22, `##` 18, `###` 16, bold. Centered when they open with المحور / الفصل / المراجع, right-aligned otherwise |
-| Tables | Right-to-left columns, 14 pt, grey header row repeated on every page, rows never split |
-| Captions | `جدول (n): ...` bold and centered, kept with its table |
-| Lists | Each numbered list restarts at 1 |
-| References | Hanging indent 0.635 cm |
+| الصفحة | A4، هوامش 2.54 سم، رقم الصفحة في المنتصف |
+| النص | Traditional Arabic بحجم 16، محاذاة من الجانبين، تباعد 1.08 |
+| العناوين | `#` بحجم 22، `##` بحجم 18، `###` بحجم 16، بخط عريض. في الوسط إذا بدأت بـ المحور أو الفصل أو المراجع، وإلى اليمين فيما عدا ذلك |
+| الجداول | الأعمدة من اليمين لليسار، حجم 14، رأس رمادي يتكرر في كل صفحة، والصف لا ينقسم بين صفحتين |
+| عناوين الجداول | `جدول (n): ...` بخط عريض في الوسط، ملاصق لجدوله |
+| القوائم | كل قائمة مرقمة تبدأ من 1 |
+| المراجع | مسافة معلّقة 0.635 سم |
 
-Options: `--ar-font`, `--en-font`, `--size`, `--table-size`, `--color`, `--line`, `--margins`, `--paper a4|letter`, `--keep-byline`, `--dir rtl|ltr|auto`.
+الخيارات: `--ar-font` و `--en-font` و `--size` و `--table-size` و `--color` و `--line` و `--margins` و `--paper a4|letter` و `--keep-byline` و `--dir rtl|ltr|auto`.
 
-### English: `md_to_docx_en.py` (APA 7)
+### الإنجليزي: `md_to_docx_en.py` بتنسيق APA 7
 
-| Element | Default |
+| العنصر | الافتراضي |
 |---|---|
-| Page | US Letter, 2.54 cm margins, page number top right |
-| Body | Times New Roman 12, double-spaced, first-line indent 1.27 cm |
-| Headings | `#` title; `##` to `#####` map to APA levels 1 to 4 |
-| Tables | `Table n` bold, title italic below; horizontal rules only |
-| Notes | `Note.` in italics under the table |
-| References | New page, hanging indent 1.27 cm |
+| الصفحة | US Letter، هوامش 2.54 سم، رقم الصفحة أعلى اليمين |
+| النص | Times New Roman بحجم 12، تباعد مزدوج، مسافة بادئة 1.27 سم لأول سطر |
+| العناوين | `#` عنوان البحث، ومن `##` إلى `#####` تقابل مستويات APA من 1 إلى 4 |
+| الجداول | `Table n` بخط عريض وتحته العنوان مائلاً، بخطوط أفقية فقط |
+| الملاحظات | `Note.` مائلة تحت الجدول |
+| المراجع | تبدأ في صفحة جديدة، بمسافة معلّقة 1.27 سم |
 
-Options: `--font`, `--size`, `--table-size`, `--line`, `--margins`, `--paper a4|letter`, `--keep-byline`.
+الخيارات: `--font` و `--size` و `--table-size` و `--line` و `--margins` و `--paper a4|letter` و `--keep-byline`.
 
-## Limits
+## الحدود
 
-- Images, charts and comments in the doc are not carried over (the markdown export drops them).
-- Footnotes become plain text.
-- The visual check runs in LibreOffice, which may not have Traditional Arabic; it judges layout, not typeface.
+- الصور والرسوم البيانية والتعليقات في المستند لا تُنقل، لأن تصدير markdown يُسقطها.
+- الحواشي السفلية تتحول إلى نص عادي.
+- التحقق البصري يجري في LibreOffice، وقد لا يتوفر فيه خط Traditional Arabic، فهو يحكم على التنسيق لا على شكل الخط.
 
-## Files
+## الملفات
+
+<div dir="ltr">
 
 ```
 doc-to-word-rtl/
-├── SKILL.md                     steps and house-style tables for Claude
-├── README.md / README.ar.md
+├── SKILL.md                     الخطوات وجداول التنسيق لـ Claude
+├── README.md / README.en.md
 └── scripts/
-    ├── md_to_docx_rtl.py        Arabic, right-to-left
-    └── md_to_docx_en.py         English, APA 7
+    ├── md_to_docx_rtl.py        العربي، من اليمين لليسار
+    └── md_to_docx_en.py         الإنجليزي، APA 7
 ```
+
+</div>
+
+</div>
