@@ -32,6 +32,17 @@ npx skills add EngDawood/awesome-arabic-claude-skills --skill doc-to-word-rtl
 
 </div>
 
+### إضافة (Plugin) في Claude Code
+
+<div dir="ltr">
+
+```
+/plugin marketplace add EngDawood/awesome-arabic-claude-skills
+/plugin install doc-to-word-rtl@awesome-arabic-claude-skills
+```
+
+</div>
+
 ### يدوياً
 
 انسخ هذا المجلد إلى `.claude/skills/` داخل المشروع، أو إلى `~/.claude/skills/` لحسابك.

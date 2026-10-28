@@ -26,6 +26,13 @@ If something goes wrong along the way, it names the cause, proposes a fix to the
 npx skills add EngDawood/awesome-arabic-claude-skills --skill doc-to-word-rtl
 ```
 
+### Claude Code plugin
+
+```
+/plugin marketplace add EngDawood/awesome-arabic-claude-skills
+/plugin install doc-to-word-rtl@awesome-arabic-claude-skills
+```
+
 ### Manual
 
 Copy this folder into `.claude/skills/` (project) or `~/.claude/skills/` (user).
