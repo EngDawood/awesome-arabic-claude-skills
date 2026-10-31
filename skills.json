@@ -49,13 +49,13 @@
       "name": "doc-to-word-rtl",
       "title_ar": "تحويل مستندات Claude إلى ورد (عربي RTL و APA)",
       "category": "Documents & Academic Writing",
-      "type": "native",
-      "upstream_repo": null,
+      "type": "synced",
+      "upstream_repo": "EngDawood/claude-doc-to-docx-arabic",
       "owner": "EngDawood",
       "description": "Exports a Claude Doc (claude.ai artifact link) to a Word .docx, Arabic docs in a right-to-left Saudi thesis house style and English docs in APA 7. Use when asked to turn a Claude Doc into Word, docx, ملف وورد or تحويل المستند إلى ورد.",
       "path": "skills/doc-to-word-rtl/SKILL.md",
-      "url": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/doc-to-word-rtl",
-      "install_cmd": "npx skills add EngDawood/awesome-arabic-claude-skills --skill doc-to-word-rtl"
+      "url": "https://github.com/EngDawood/claude-doc-to-docx-arabic/tree/main/skills/doc-to-word-rtl",
+      "install_cmd": "npx skills add EngDawood/claude-doc-to-docx-arabic --skill doc-to-word-rtl"
     },
     {
       "id": "video-caption-mcp",
