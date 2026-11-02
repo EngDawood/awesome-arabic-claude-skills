@@ -190,13 +190,34 @@ def setup_document(cfg):
         for a in ('w:asciiTheme', 'w:hAnsiTheme', 'w:eastAsiaTheme', 'w:cstheme'):
             if f.get(qn(a)) is not None:
                 del f.attrib[qn(a)]
+    # Document title uses the built-in Title style: it has no outline level,
+    # so it never lands in Word's table of contents (Heading 1 would).
+    ts = doc.styles['Title']
+    ts.font.size = Pt(cfg.size + 6); ts.font.bold = True; ts.font.color.rgb = RGBColor.from_string(cfg.color)
+    ts.font.name = cfg.en_font
+    tp = ts.element.get_or_add_pPr()
+    for tag in ('w:pBdr', 'w:contextualSpacing'):
+        el = tp.find(qn(tag))
+        if el is not None:
+            tp.remove(el)
+    tr = ts.element.get_or_add_rPr()
+    f = tr.find(qn('w:rFonts'))
+    if f is None:
+        f = OxmlElement('w:rFonts'); tr.insert(0, f)
+    for a in ('ascii', 'hAnsi', 'eastAsia'):
+        f.set(qn(f'w:{a}'), cfg.en_font)
+    f.set(qn('w:cs'), cfg.ar_font)
+    for a in ('w:asciiTheme', 'w:hAnsiTheme', 'w:eastAsiaTheme', 'w:cstheme'):
+        if f.get(qn(a)) is not None:
+            del f.attrib[qn(a)]
     add_page_number(sec, cfg)
     return doc
 
 
 def add_heading(doc, text, level, cfg):
     rtl = is_rtl_text(text, cfg.doc_rtl)
-    p = doc.add_paragraph(style=f'Heading {min(level, 4)}')
+    # '#' is the document title: Title style, kept out of the table of contents
+    p = doc.add_paragraph(style='Title' if level == 1 else f'Heading {min(level, 4)}')
     set_par_dir(p, rtl)
     sizes = {1: cfg.size + 6, 2: cfg.size + 2, 3: cfg.size, 4: cfg.size}
     add_inline(p, text, cfg, rtl, size=sizes[min(level, 4)], bold=True)

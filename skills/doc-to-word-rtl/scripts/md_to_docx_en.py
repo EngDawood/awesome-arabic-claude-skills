@@ -138,14 +138,32 @@ def setup_document(cfg):
         for a in ('w:asciiTheme', 'w:hAnsiTheme', 'w:eastAsiaTheme', 'w:cstheme'):
             if f.get(qn(a)) is not None:
                 del f.attrib[qn(a)]
+    # Paper title uses the built-in Title style: it has no outline level,
+    # so it never lands in Word's table of contents (Heading 1 would).
+    ts = doc.styles['Title']
+    ts.font.size = Pt(cfg.size); ts.font.bold = True; ts.font.color.rgb = RGBColor(0, 0, 0)
+    ts.font.name = cfg.font
+    tp = ts.element.get_or_add_pPr()
+    for tag in ('w:pBdr', 'w:contextualSpacing'):
+        el = tp.find(qn(tag))
+        if el is not None:
+            tp.remove(el)
+    f = ts.element.get_or_add_rPr().find(qn('w:rFonts'))
+    if f is None:
+        f = OxmlElement('w:rFonts'); ts.element.get_or_add_rPr().insert(0, f)
+    for a in ('ascii', 'hAnsi', 'eastAsia', 'cs'):
+        f.set(qn(f'w:{a}'), cfg.font)
+    for a in ('w:asciiTheme', 'w:hAnsiTheme', 'w:eastAsiaTheme', 'w:cstheme'):
+        if f.get(qn(a)) is not None:
+            del f.attrib[qn(a)]
     add_page_number(sec, cfg)
     return doc
 
 
 def add_heading(doc, text, md_level, cfg):
-    # md '#' = title; '##'..'#####' = APA levels 1..4
+    # md '#' = title (Title style, not in the TOC); '##'..'#####' = APA levels 1..4
     apa = md_level - 1
-    p = doc.add_paragraph(style=f'Heading {min(max(apa, 1), 5)}')
+    p = doc.add_paragraph(style='Title' if apa <= 0 else f'Heading {min(apa, 5)}')
     if apa <= 0:
         add_inline(p, text, cfg, bold=True); fmt(p, cfg, WD_ALIGN_PARAGRAPH.CENTER)
     elif apa == 1:

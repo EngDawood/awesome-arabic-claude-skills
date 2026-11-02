@@ -51,7 +51,7 @@ Taken from a hand-formatted Saudi master's thesis chapter.
 |---|---|---|
 | Page | A4, margins 2.54 cm, centered page number | `--paper`, `--margins` |
 | Body | Traditional Arabic 16, colour 0D0D0D, justified, line 1.08, 8 pt after | `--ar-font`, `--en-font`, `--size`, `--color`, `--line` |
-| `#` | 22 bold, centered | derives from `--size` |
+| `#` | 22 bold, centered; Title style, so it stays out of the table of contents | derives from `--size` |
 | `##` | 18 bold | derives from `--size` |
 | `###` | 16 bold | derives from `--size` |
 | Heading alignment | centered when it opens with المحور / الفصل / مراجع / المراجع; right otherwise (أولاً، 1.، خلاصة) | `CENTER_H_RE` in script |
@@ -72,7 +72,7 @@ Taken from a hand-formatted Saudi master's thesis chapter.
 |---|---|---|
 | Page | US Letter, margins 2.54 cm, page number top right | `--paper`, `--margins` |
 | Body | Times New Roman 12, double-spaced, left-aligned, first line indented 1.27 cm, no space between paragraphs | `--font`, `--size`, `--line` |
-| `#` | paper title, bold centered | |
+| `#` | paper title, bold centered; Title style, so it stays out of the table of contents | |
 | `##` | APA Level 1, bold centered | |
 | `###` | Level 2, bold flush left | |
 | `####` | Level 3, bold italic flush left | |
