@@ -43,9 +43,13 @@ jobs:
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
             git config --local user.name "github-actions[bot]"
             git add -A skills/
-            git add skills.json README.md README.en.md sources.json
-            git commit -m "chore(skills): auto-sync skills catalog and upstream repositories [skip ci]"
-            git push
+            git add skills.json README.md README.en.md sources.json .claude-plugin/marketplace.json
+            if [ -n "$(git diff --cached --name-only)" ]; then
+              git commit -m "chore(skills): auto-sync skills catalog and upstream repositories [skip ci]"
+              git push
+            else
+              echo "Changes were only in files outside the catalog commit; nothing to commit."
+            fi
           else
             echo "No catalog changes detected. Repository is up to date."
           fi

@@ -46,8 +46,18 @@
       "author": {
         "name": "EngDawood"
       },
-      "homepage": "https://github.com/EngDawood/awesome-arabic-claude-skills/tree/main/skills/doc-to-word-rtl",
+      "homepage": "https://github.com/EngDawood/claude-doc-to-docx-arabic/tree/main/skills/doc-to-word-rtl",
       "category": "Documents & Academic Writing"
+    },
+    {
+      "name": "presentation",
+      "source": "./skills/presentation",
+      "description": "Convert any content (markdown, text, documents, research) into stunning single-file HTML presentations with full Arabic support, SVG icons, beautiful animations, and motion graphics. Use when creating slideshows, converting documents to presentations, or building visual content.",
+      "author": {
+        "name": "karem505"
+      },
+      "homepage": "https://github.com/karem505/karem-arabic-presentation/tree/master/skills/presentation",
+      "category": "General"
     },
     {
       "name": "video-caption-mcp",

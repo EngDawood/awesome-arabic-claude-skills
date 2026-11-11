@@ -9,6 +9,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 import tarfile
 import urllib.request
@@ -27,6 +28,51 @@ TABLE_START_MARKER = "<!-- SKILLS_TABLE_START -->"
 TABLE_END_MARKER = "<!-- SKILLS_TABLE_END -->"
 COMMANDS_START_MARKER = "<!-- COMMANDS_TABLE_START -->"
 COMMANDS_END_MARKER = "<!-- COMMANDS_TABLE_END -->"
+
+_DEFAULT_BRANCH_CACHE: dict = {}
+
+
+def resolve_default_branch(repo: str):
+    """Return the GitHub repo's default branch, or None if undeterminable.
+
+    Uses `git ls-remote --symref` first (no API quota), then the GitHub REST
+    API (with GITHUB_TOKEN/GH_TOKEN when available). Callers fall back to
+    "main" when this returns None, so a repo whose default branch is e.g.
+    "master" is synced from the right branch instead of 404ing on "main".
+    """
+    if repo in _DEFAULT_BRANCH_CACHE:
+        return _DEFAULT_BRANCH_CACHE[repo]
+
+    branch = None
+    try:
+        out = subprocess.run(
+            ["git", "ls-remote", "--symref", f"https://github.com/{repo}.git", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        match = re.search(r"^ref: refs/heads/(\S+)\s+HEAD", out.stdout, re.MULTILINE)
+        if match:
+            branch = match.group(1)
+    except Exception:
+        pass
+
+    if not branch:
+        try:
+            headers = {"User-Agent": "Mozilla/5.0", "Accept": "application/vnd.github+json"}
+            token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+            if token:
+                headers["Authorization"] = f"Bearer {token}"
+            req = urllib.request.Request(
+                f"https://api.github.com/repos/{repo}", headers=headers
+            )
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                branch = json.loads(resp.read().decode("utf-8")).get("default_branch") or None
+        except Exception:
+            pass
+
+    _DEFAULT_BRANCH_CACHE[repo] = branch
+    return branch
 
 
 def parse_frontmatter_text(content: str) -> dict:
@@ -139,11 +185,11 @@ def sync_external_repositories(sources: list) -> dict:
         repo_match = re.match(r"^([^/]+/[^/]+)(?:/tree/([^/]+)(?:/(.*))?)?", raw_repo)
         if repo_match:
             repo = repo_match.group(1)
-            branch = item.get("branch") or repo_match.group(2) or "main"
+            branch = item.get("branch") or repo_match.group(2) or resolve_default_branch(repo) or "main"
             url_subpath = repo_match.group(3) or ""
         else:
             repo = raw_repo
-            branch = item.get("branch", "main")
+            branch = item.get("branch") or resolve_default_branch(repo) or "main"
             url_subpath = ""
 
         dir_spec = item.get("dir")
