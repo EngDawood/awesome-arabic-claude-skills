@@ -14,7 +14,11 @@
     "repo": "muhmoosa/claude-arabic-docs"
   },
   {
-  "repo": "EngDawood/claude-doc-to-docx-arabic"},
+  "repo": "EngDawood/claude-doc-to-docx-arabic"
+  },
 {
-  "repo": "karem505/karem-arabic-presentation"}
+  "repo": "karem505/karem-arabic-presentation" ,
+      "dir": "skills/presentation",
+
+}
 ]
