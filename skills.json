@@ -52,7 +52,7 @@
       "type": "synced",
       "upstream_repo": "EngDawood/claude-doc-to-docx-arabic",
       "owner": "EngDawood",
-      "description": "Exports a Claude Doc (claude.ai artifact link) to a Word .docx, Arabic docs in a right-to-left Saudi thesis house style and English docs in APA 7. Use when asked to turn a Claude Doc into Word, docx, ملف وورد or تحويل المستند إلى ورد.",
+      "description": "Exports a Claude Doc (claude.ai artifact link) to a Word .docx, Arabic docs in a right-to-left Saudi thesis house style and English docs in APA 7. Use when asked to turn a Claude Doc into Word, docx, ملف وورد or تحويل المستند إلى ورد. Also read for a formal Arabic Word report with a cover page, table of contents and APA references (docx فورمال, غلاف + فهرس).",
       "path": "skills/doc-to-word-rtl/SKILL.md",
       "url": "https://github.com/EngDawood/claude-doc-to-docx-arabic/tree/main/skills/doc-to-word-rtl",
       "install_cmd": "npx skills add EngDawood/claude-doc-to-docx-arabic --skill doc-to-word-rtl"

@@ -1,6 +1,6 @@
 ---
 name: doc-to-word-rtl
-description: Exports a Claude Doc (claude.ai artifact link) to a Word .docx, Arabic docs in a right-to-left Saudi thesis house style and English docs in APA 7. Use when asked to turn a Claude Doc into Word, docx, ملف وورد or تحويل المستند إلى ورد.
+description: Exports a Claude Doc (claude.ai artifact link) to a Word .docx, Arabic docs in a right-to-left Saudi thesis house style and English docs in APA 7. Use when asked to turn a Claude Doc into Word, docx, ملف وورد or تحويل المستند إلى ورد. Also read for a formal Arabic Word report with a cover page, table of contents and APA references (docx فورمال, غلاف + فهرس).
 category: Documents & Academic Writing
 title_ar: تحويل مستندات Claude إلى ورد (عربي RTL و APA)
 ---
@@ -13,6 +13,8 @@ Turn a Claude Doc into a .docx that opens in Word already in its **house style**
 - English doc → `md_to_docx_en.py` (APA 7 student paper)
 
 The doc's language is the one most of its prose is written in; the client's instructions win when they name a style.
+
+**Formal report.** When the user asks for a cover page, a table of contents or an APA reference list ("docx فورمال", "غلاف + فهرس"), the scripts below do not add them. Read `references/formal-layout.md` first and build with docx-js following it; the bidi, pagination and TOC rules there come from renders that failed.
 
 Build the final file with the script. The connector's own `docx` export carries no bidi settings, so its Arabic tables and paragraphs come out mirrored.
 
